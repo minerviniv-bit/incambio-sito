@@ -3,25 +3,25 @@ import Footer from "../components/Footer";
 import MediaLogos from "../components/MediaLogos";
 import Steps from "../components/Steps";
 import CasesShowcase from "../components/CasesShowcase";
-import ClientLogos from "../components/ClientLogos"; // <--- nuovo import
+import ClientLogos from "../components/ClientLogos";
 
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-black text-zinc-100">
       <Header />
 
-      {/* HERO – immagine grande, H1 nascosto su desktop */}
+      {/* HERO */}
       <section className="relative isolate overflow-hidden pt-28">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#8b5c20_0%,transparent_55%)] opacity-40" />
         <div className="relative mx-auto max-w-7xl px-6 pb-16">
           <div className="mx-auto text-center">
             <img
-              src="/images/Settembre-2025.png" // rinomina il file togliendo gli spazi
+              src="/images/Settembre-2025.png"
               alt="Calice di vino"
               className="mx-auto w-full max-w-6xl object-contain"
             />
 
-            {/* L’immagine ha già il titolo: mostralo SOLO su mobile per SEO/accessibilità */}
+            {/* L’immagine ha già il titolo: mostralo solo su mobile per SEO/accessibilità */}
             <h1 className="font-serif text-2xl tracking-wide text-[#e6d39a] md:hidden">
               TRASFORMA IL TUO PRODOTTO IN VISIBILITÀ
             </h1>
@@ -68,22 +68,6 @@ export default function HomePage() {
 
       {/* CLIENTI */}
       <ClientLogos />
-
-      {/* CTA FINALE */}
-      <section className="relative isolate overflow-hidden py-16">
-        <div className="absolute inset-0 bg-[radial-gradient(70%_50%_at_50%_40%,#e6d39a22_0%,transparent_60%)]" />
-        <div className="relative mx-auto max-w-4xl px-6 text-center">
-          <h2 className="font-serif text-3xl md:text-4xl text-[#e6d39a]">
-            E la tua merce? La trasformiamo in pubblicità.
-          </h2>
-          <a
-            href="#contatti"
-            className="mt-6 inline-block rounded-2xl border border-[#e6d39a]/60 bg-[#e6d39a]/10 px-7 py-3 text-sm font-semibold text-[#e6d39a] hover:bg-[#e6d39a]/20 transition"
-          >
-            Parliamone ora
-          </a>
-        </div>
-      </section>
 
       <Footer />
     </main>
