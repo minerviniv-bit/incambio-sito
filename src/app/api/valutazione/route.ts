@@ -1,89 +1,151 @@
-import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+// src/app/api/valutazione/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import nodemailer, { type SentMessageInfo } from "nodemailer";
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+export const runtime = "nodejs"; // assicura runtime Node per nodemailer
 
-export async function POST(req: Request) {
+// Helpers per leggere .env in modo tipizzato
+const {
+  SMTP_HOST,
+  SMTP_PORT,
+  SMTP_USER,
+  SMTP_PASS,
+  MAIL_FROM,
+  MAIL_TO,
+} = process.env;
+
+if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS || !MAIL_FROM || !MAIL_TO) {
+  // In build/exec, se mancano le variabili, è meglio far fallire chiaramente
+  // (Oppure potresti fare console.warn e rispondere 500)
+  // Qui lancio errore per avere log chiari in Vercel.
+  throw new Error("Missing required SMTP/Mailer environment variables.");
+}
+
+// Tipi dei campi che ci aspettiamo dal form
+interface ValutazionePayload {
+  company: string;
+  website?: string;
+  name: string;
+  email: string;
+  phone?: string;
+
+  asset: string;
+  qty?: string;
+  value?: string;
+  deadline?: string;
+
+  goals?: string;
+  channels: string[];
+
+  // eventuale file allegato
+  file?: File | null;
+}
+
+/** Raccoglie i campi dal FormData con tipi sicuri */
+function parseFormData(fd: FormData): ValutazionePayload {
+  const getStr = (k: string): string | undefined => {
+    const v = fd.get(k);
+    return typeof v === "string" ? v : undefined;
+  };
+
+  const channels = fd.getAll("channels").map(String); // → string[]
+
+  const payload: ValutazionePayload = {
+    company: getStr("company") ?? "",
+    website: getStr("website"),
+    name: getStr("name") ?? "",
+    email: getStr("email") ?? "",
+    phone: getStr("phone"),
+
+    asset: getStr("asset") ?? "",
+    qty: getStr("qty"),
+    value: getStr("value"),
+    deadline: getStr("deadline"),
+
+    goals: getStr("goals"),
+    channels,
+
+    file: (fd.get("file") as File | null) ?? null,
+  };
+
+  return payload;
+}
+
+export async function POST(req: NextRequest) {
   try {
-    const body = await req.json().catch(() => null);
-    if (!body) {
-      return NextResponse.json({ ok: false, message: "JSON mancante" }, { status: 400 });
+    const formData = await req.formData();
+    const data = parseFormData(formData);
+
+    // **Validazione minima** (puoi renderla più severa)
+    if (!data.company || !data.name || !data.email || !data.asset) {
+      return NextResponse.json(
+        { ok: false, error: "Dati obbligatori mancanti." },
+        { status: 400 }
+      );
     }
 
-    // campi dal form (nuovi nomi)
-    const {
-      company, website, name, email, phone,
-      asset, qty, value, deadline,
-      goals, channels
-    } = body as Record<string, any>;
+    // Preparo testo email
+    const lines: string[] = [
+      "Nuova richiesta di VALUTAZIONE",
+      "",
+      "— DATI AZIENDA/CONTATTO —",
+      `Azienda/Brand: ${data.company}`,
+      `Sito web: ${data.website ?? "-"}`,
+      `Nome e cognome: ${data.name}`,
+      `Email: ${data.email}`,
+      `Telefono: ${data.phone ?? "-"}`,
+      "",
+      "— MERCE/SERVIZIO —",
+      `Cosa: ${data.asset}`,
+      `Quantità: ${data.qty ?? "-"}`,
+      `Valore stimato: ${data.value ?? "-"}`,
+      `Scadenza/tempo di utilizzo: ${data.deadline ?? "-"}`,
+      "",
+      "— OBIETTIVI & MEDIA —",
+      `Obiettivi: ${data.goals ?? "-"}`,
+      `Canali preferiti: ${data.channels.length ? data.channels.join(", ") : "-"}`,
+      "",
+    ];
 
-    // validazione minima
-    for (const [k, v] of Object.entries({ company, name, email, asset })) {
-      if (!v || String(v).trim() === "") {
-        return NextResponse.json({ ok: false, message: `Campo mancante: ${k}` }, { status: 400 });
-      }
-    }
-
-    const {
-      SMTP_HOST = "authsmtp.register.it",
-      SMTP_PORT = "587",
-      SMTP_USER,
-      SMTP_PASS,
-      MAIL_TO = "info@incambio.eu",
-      MAIL_FROM = SMTP_USER || "no-reply@incambio.eu",
-    } = process.env as Record<string, string>;
-
-    if (!SMTP_USER || !SMTP_PASS) {
-      console.error("[SMTP] ENV mancanti", { user: !!SMTP_USER, pass: !!SMTP_PASS });
-      return NextResponse.json({ ok: false, message: "SMTP non configurato" }, { status: 500 });
-    }
-
-    const port = Number(SMTP_PORT) || 587;
+    // Config transporter SMTP
     const transporter = nodemailer.createTransport({
       host: SMTP_HOST,
-      port,
-      secure: port === 465,      // 465 SSL, altrimenti STARTTLS
-      auth: { user: SMTP_USER, pass: SMTP_PASS },
-      tls: { rejectUnauthorized: false },
+      port: Number(SMTP_PORT),
+      secure: Number(SMTP_PORT) === 465, // di solito 465 = SSL
+      auth: {
+        user: SMTP_USER,
+        pass: SMTP_PASS,
+      },
     });
 
-    try { await transporter.verify(); console.log("[SMTP] Verify OK"); }
-    catch (e) { console.warn("[SMTP] Verify fallita (continuo)", e); }
+    // Allegato (se presente)
+    const attachments: { filename: string; content: Buffer }[] = [];
+    if (data.file && data.file.size > 0) {
+      const arrayBuffer = await data.file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      attachments.push({
+        filename: data.file.name || "allegato",
+        content: buffer,
+      });
+    }
 
-    const channelsText = Array.isArray(channels) ? channels.join(", ") : (channels || "-");
-
-    const text = `
-Nuova richiesta di valutazione
-
-Azienda: ${company}
-Referente: ${name}
-Email: ${email}
-Telefono: ${phone || "-"}
-
-Sito web: ${website || "-"}
-
-Cosa scambiare: ${asset}
-Quantità: ${qty || "-"}
-Valore stimato: ${value || "-"}
-Scadenza/tempo di utilizzo: ${deadline || "-"}
-
-Obiettivi: ${goals || "-"}
-Canali preferiti: ${channelsText}
-`.trim();
-
-    const info = await transporter.sendMail({
-      from: `"inCambio" <${MAIL_FROM}>`, // su Register conviene = SMTP_USER
+    const info: SentMessageInfo = await transporter.sendMail({
+      from: MAIL_FROM,
       to: MAIL_TO,
-      replyTo: email || MAIL_FROM,
-      subject: `Richiesta valutazione – ${company} (${name})`,
-      text,
+      subject: `Valutazione – ${data.company} – ${data.name}`,
+      text: lines.join("\n"),
+      attachments,
+      replyTo: data.email, // utile per rispondere al contatto
     });
 
-    console.log("[SMTP] Inviata", info.messageId);
-    return NextResponse.json({ ok: true }, { status: 200 });
-  } catch (err: any) {
-    console.error("[VALUTAZIONE] Errore", err);
-    return NextResponse.json({ ok: false, message: "Errore interno", error: err?.message }, { status: 500 });
+    // Risposta OK
+    return NextResponse.json({ ok: true, id: info.messageId });
+  } catch (err) {
+    // Tipizzazione sicura dell'errore
+    const message =
+      err instanceof Error ? err.message : "Unknown error during email send.";
+    console.error("Valutazione API error:", message);
+
+    return NextResponse.json({ ok: false, error: message }, { status: 500 });
   }
 }
