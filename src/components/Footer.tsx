@@ -1,13 +1,18 @@
+import Image from "next/image";
+
 export default function Footer() {
   return (
     <footer className="border-t border-white/10 bg-black/80 py-10 text-center text-sm text-zinc-400">
       <div className="mx-auto max-w-6xl px-6">
         {/* LOGO IMMAGINE */}
         <div className="mb-4 flex justify-center">
-          <img
+          <Image
             src="/logos/incambio.png"
             alt="InCambio"
+            width={160}   // scegli larghezza reale del file
+            height={160}  // scegli altezza reale del file
             className="h-40 w-auto"
+            priority      // carica subito (logo importante anche nel footer)
           />
         </div>
 

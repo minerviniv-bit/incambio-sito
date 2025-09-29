@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function CasesShowcase() {
   const cases = [
     {
@@ -55,10 +57,14 @@ export default function CasesShowcase() {
               className="bg-zinc-900 rounded-[20px] overflow-hidden border border-zinc-800 shadow-lg"
             >
               <div className="relative aspect-[4/3]">
-                <img
+                <Image
                   src={c.img}
                   alt={c.alt}
-                  className="absolute inset-0 h-full w-full object-cover"
+                  fill
+                  sizes="(max-width: 768px) 100vw,
+                         (max-width: 1200px) 50vw,
+                         33vw"
+                  className="object-cover"
                 />
               </div>
 

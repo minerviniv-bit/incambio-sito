@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Header() {
   return (
@@ -7,7 +8,14 @@ export default function Header() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <img src="/logos/incambio.png" alt="InCambio" className="h-30 w-auto" />
+          <Image
+            src="/logos/incambio.png"
+            alt="InCambio"
+            width={120}     // scegli larghezza reale del tuo logo
+            height={40}     // scegli altezza reale del tuo logo
+            priority        // carica subito (essendo il logo è critico)
+            className="h-10 w-auto"
+          />
         </Link>
 
         {/* Nav */}

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function MediaLogos() {
   const logos = [
     { src: "/logos/netflix.jpg", alt: "Netflix" },
@@ -25,7 +27,6 @@ export default function MediaLogos() {
       </h2>
       <div className="mx-auto max-w-6xl grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-12 items-center justify-items-center">
         {logos.map((logo) => {
-          // Se il logo è IGP o Sole → lo mostriamo più grande
           const isSpecial =
             logo.alt === "Igp Decaux" || logo.alt === "Il Sole 24 Ore";
 
@@ -34,9 +35,11 @@ export default function MediaLogos() {
               key={logo.alt}
               className="flex items-center justify-center w-48 h-24 bg-transparent"
             >
-              <img
+              <Image
                 src={logo.src}
                 alt={logo.alt}
+                width={180} // puoi regolare in base ai file reali
+                height={isSpecial ? 100 : 80}
                 className={`${isSpecial ? "max-h-32" : "max-h-24"} object-contain`}
               />
             </div>

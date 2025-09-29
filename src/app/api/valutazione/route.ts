@@ -1,151 +1,134 @@
-// src/app/api/valutazione/route.ts
-import { NextRequest, NextResponse } from "next/server";
-import nodemailer, { type SentMessageInfo } from "nodemailer";
+import { NextResponse } from "next/server";
+import nodemailer from "nodemailer";
+import fs from "fs";
 
-export const runtime = "nodejs"; // assicura runtime Node per nodemailer
-
-// Helpers per leggere .env in modo tipizzato
-const {
-  SMTP_HOST,
-  SMTP_PORT,
-  SMTP_USER,
-  SMTP_PASS,
-  MAIL_FROM,
-  MAIL_TO,
-} = process.env;
-
-if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS || !MAIL_FROM || !MAIL_TO) {
-  // In build/exec, se mancano le variabili, è meglio far fallire chiaramente
-  // (Oppure potresti fare console.warn e rispondere 500)
-  // Qui lancio errore per avere log chiari in Vercel.
-  throw new Error("Missing required SMTP/Mailer environment variables.");
-}
-
-// Tipi dei campi che ci aspettiamo dal form
-interface ValutazionePayload {
-  company: string;
-  website?: string;
-  name: string;
-  email: string;
-  phone?: string;
-
-  asset: string;
-  qty?: string;
-  value?: string;
-  deadline?: string;
-
-  goals?: string;
-  channels: string[];
-
-  // eventuale file allegato
-  file?: File | null;
-}
-
-/** Raccoglie i campi dal FormData con tipi sicuri */
-function parseFormData(fd: FormData): ValutazionePayload {
-  const getStr = (k: string): string | undefined => {
-    const v = fd.get(k);
-    return typeof v === "string" ? v : undefined;
-  };
-
-  const channels = fd.getAll("channels").map(String); // → string[]
-
-  const payload: ValutazionePayload = {
-    company: getStr("company") ?? "",
-    website: getStr("website"),
-    name: getStr("name") ?? "",
-    email: getStr("email") ?? "",
-    phone: getStr("phone"),
-
-    asset: getStr("asset") ?? "",
-    qty: getStr("qty"),
-    value: getStr("value"),
-    deadline: getStr("deadline"),
-
-    goals: getStr("goals"),
-    channels,
-
-    file: (fd.get("file") as File | null) ?? null,
-  };
-
-  return payload;
-}
-
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     const formData = await req.formData();
-    const data = parseFormData(formData);
 
-    // **Validazione minima** (puoi renderla più severa)
-    if (!data.company || !data.name || !data.email || !data.asset) {
+    // Campi principali
+    const company = formData.get("company") as string | null;
+    const name = formData.get("name") as string | null;
+    const email = formData.get("email") as string | null;
+    const phone = formData.get("phone") as string | null;
+    const website = formData.get("website") as string | null;
+    const asset = formData.get("asset") as string | null;
+    const qty = formData.get("qty") as string | null;
+    const value = formData.get("value") as string | null;
+    const deadline = formData.get("deadline") as string | null;
+    const goals = formData.get("goals") as string | null;
+
+    // 🔑 Checkbox multipli → array
+    const channels = formData.getAll("channels") as string[];
+
+    // 🔑 File allegato
+    const file = formData.get("file") as File | null;
+    let savedFilePath: string | null = null;
+
+    if (file && file.size > 0) {
+      if (file.size > 5 * 1024 * 1024) {
+        return NextResponse.json(
+          { ok: false, message: "File troppo grande (max 5MB)" },
+          { status: 400 }
+        );
+      }
+
+      if (
+        !["application/pdf", "image/png", "image/jpeg"].includes(file.type)
+      ) {
+        return NextResponse.json(
+          { ok: false, message: "Formato file non consentito" },
+          { status: 400 }
+        );
+      }
+
+      // Salvataggio locale (solo se serve — altrimenti puoi uploadare su S3 o simili)
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      savedFilePath = `./uploads/${Date.now()}-${file.name}`;
+      await fs.promises.writeFile(savedFilePath, buffer);
+    }
+
+    // ✅ Controllo campi obbligatori
+    if (!company || !name || !email || !asset) {
       return NextResponse.json(
-        { ok: false, error: "Dati obbligatori mancanti." },
+        { ok: false, message: "Campi obbligatori mancanti" },
         { status: 400 }
       );
     }
 
-    // Preparo testo email
-    const lines: string[] = [
-      "Nuova richiesta di VALUTAZIONE",
-      "",
-      "— DATI AZIENDA/CONTATTO —",
-      `Azienda/Brand: ${data.company}`,
-      `Sito web: ${data.website ?? "-"}`,
-      `Nome e cognome: ${data.name}`,
-      `Email: ${data.email}`,
-      `Telefono: ${data.phone ?? "-"}`,
-      "",
-      "— MERCE/SERVIZIO —",
-      `Cosa: ${data.asset}`,
-      `Quantità: ${data.qty ?? "-"}`,
-      `Valore stimato: ${data.value ?? "-"}`,
-      `Scadenza/tempo di utilizzo: ${data.deadline ?? "-"}`,
-      "",
-      "— OBIETTIVI & MEDIA —",
-      `Obiettivi: ${data.goals ?? "-"}`,
-      `Canali preferiti: ${data.channels.length ? data.channels.join(", ") : "-"}`,
-      "",
-    ];
+    // Config SMTP
+    const {
+      SMTP_HOST,
+      SMTP_PORT,
+      SMTP_USER,
+      SMTP_PASS,
+      MAIL_TO = "info@incambio.eu",
+      MAIL_FROM = SMTP_USER || "no-reply@incambio.eu",
+    } = process.env as Record<string, string>;
 
-    // Config transporter SMTP
-    const transporter = nodemailer.createTransport({
-      host: SMTP_HOST,
-      port: Number(SMTP_PORT),
-      secure: Number(SMTP_PORT) === 465, // di solito 465 = SSL
-      auth: {
-        user: SMTP_USER,
-        pass: SMTP_PASS,
-      },
-    });
-
-    // Allegato (se presente)
-    const attachments: { filename: string; content: Buffer }[] = [];
-    if (data.file && data.file.size > 0) {
-      const arrayBuffer = await data.file.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-      attachments.push({
-        filename: data.file.name || "allegato",
-        content: buffer,
+    if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS) {
+      console.warn("[VALUTAZIONE] SMTP non configurato. Log dei dati:", {
+        company,
+        name,
+        email,
+        phone,
+        website,
+        asset,
+        qty,
+        value,
+        deadline,
+        goals,
+        channels,
+        file: savedFilePath,
+      });
+      return NextResponse.json({
+        ok: true,
+        message: "Richiesta acquisita ma SMTP non configurato.",
       });
     }
 
-    const info: SentMessageInfo = await transporter.sendMail({
-      from: MAIL_FROM,
-      to: MAIL_TO,
-      subject: `Valutazione – ${data.company} – ${data.name}`,
-      text: lines.join("\n"),
-      attachments,
-      replyTo: data.email, // utile per rispondere al contatto
+    const transporter = nodemailer.createTransport({
+      host: SMTP_HOST,
+      port: Number(SMTP_PORT),
+      secure: Number(SMTP_PORT) === 465,
+      auth: { user: SMTP_USER, pass: SMTP_PASS },
     });
 
-    // Risposta OK
-    return NextResponse.json({ ok: true, id: info.messageId });
-  } catch (err) {
-    // Tipizzazione sicura dell'errore
-    const message =
-      err instanceof Error ? err.message : "Unknown error during email send.";
-    console.error("Valutazione API error:", message);
+    const testo = `
+Nuova richiesta di valutazione:
 
-    return NextResponse.json({ ok: false, error: message }, { status: 500 });
+Azienda: ${company}
+Nome: ${name}
+Email: ${email}
+Telefono: ${phone || "-"}
+Sito web: ${website || "-"}
+
+Merce: ${asset}
+Quantità: ${qty || "-"}
+Valore stimato: ${value || "-"}
+Scadenza: ${deadline || "-"}
+
+Obiettivi: ${goals || "-"}
+Canali preferiti: ${channels.length > 0 ? channels.join(", ") : "-"}
+
+File allegato: ${savedFilePath || "Nessuno"}
+    `.trim();
+
+    await transporter.sendMail({
+      from: `"InCambio" <${MAIL_FROM}>`,
+      to: MAIL_TO,
+      replyTo: email || MAIL_FROM,
+      subject: `Richiesta valutazione – ${company} (${name})`,
+      text: testo,
+    });
+
+    return NextResponse.json({ ok: true }, { status: 200 });
+  } catch (err) {
+    console.error("[VALUTAZIONE] Errore generale:", err);
+    return NextResponse.json(
+      { ok: false, message: "Errore interno durante l'invio." },
+      { status: 500 }
+    );
   }
 }
