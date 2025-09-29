@@ -1,15 +1,23 @@
 import Image from "next/image";
 
+type ClientItem = {
+  src: string;
+  alt: string;
+  width?: number;   // intrinseci per riservare spazio
+  height?: number;
+  scale?: number;   // 1 = base, <1 più piccolo, >1 più grande
+};
+
 export default function ClientLogos() {
-  const clients = [
-    { src: "/clienti/granapadano.png", alt: "Grana Padano", width: 160, height: 80 },
-    { src: "/clienti/parconaturaviva.png", alt: "Parco Natura Viva", width: 160, height: 80 },
-    { src: "/clienti/shulz.png", alt: "Shulz", width: 160, height: 80 },
-    { src: "/clienti/pivagroup.png", alt: "Piva Group", width: 160, height: 80 },
-    { src: "/clienti/askoll.png", alt: "Askoll", width: 160, height: 80 },
-    { src: "/clienti/safariravenna.png", alt: "Safari Ravenna", width: 160, height: 80 },
-    { src: "/clienti/fiabilandia.png", alt: "Fiabilandia", width: 160, height: 80 },
-    { src: "/clienti/cinecittaworld.png", alt: "Cinecittà World", width: 160, height: 80 },
+  const clients: ClientItem[] = [
+    { src: "/clienti/granapadano.png", alt: "Grana Padano", width: 320, height: 160, scale: 1.1 },
+    { src: "/clienti/parconaturaviva.png", alt: "Parco Natura Viva", width: 320, height: 160, scale: 1 },
+    { src: "/clienti/shulz.png", alt: "Shulz", width: 320, height: 160, scale: 1.5 },
+    { src: "/clienti/pivagroup.png", alt: "Piva Group", width: 320, height: 160, scale: 1.1 },
+    { src: "/clienti/askoll.png", alt: "Askoll", width: 320, height: 160, scale: 1 },
+    { src: "/clienti/safariravenna.png", alt: "Safari Ravenna", width: 320, height: 160, scale: 0.8 },
+    { src: "/clienti/fiabilandia.png", alt: "Fiabilandia", width: 320, height: 160, scale: 0.8 },
+    { src: "/clienti/cinecittaworld.png", alt: "Cinecittà World", width: 320, height: 160, scale: 1.15 },
   ];
 
   return (
@@ -17,21 +25,27 @@ export default function ClientLogos() {
       <h2 className="text-center font-serif text-2xl text-[#e6d39a] mb-12">
         Alcuni clienti
       </h2>
-      <div className="mx-auto max-w-6xl grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-12 items-center justify-items-center">
-        {clients.map((client) => (
-          <div
-            key={client.alt}
-            className="flex items-center justify-center w-40 h-24 bg-transparent"
-          >
-            <Image
-              src={client.src}
-              alt={client.alt}
-              width={client.width}
-              height={client.height}
-              className="max-h-20 max-w-[160px] object-contain"
-            />
-          </div>
-        ))}
+
+      <div className="mx-auto max-w-6xl px-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-10 items-center justify-items-center">
+        {clients.map((c) => {
+          const scale = c.scale ?? 1;
+          return (
+            <div key={c.alt} className="h-16 sm:h-20 md:h-24 flex items-center justify-center">
+              <div className="relative" style={{ height: `${scale * 100}%` }}>
+                <Image
+                  src={c.src}
+                  alt={c.alt}
+                  width={c.width ?? 320}
+                  height={c.height ?? 160}
+                  loading="lazy"
+                  sizes="(max-width: 640px) 40vw, (max-width: 768px) 30vw, 200px"
+                  style={{ height: "100%", width: "auto", objectFit: "contain" }}
+                  draggable={false}
+                />
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

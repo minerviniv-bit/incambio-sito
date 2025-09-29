@@ -14,7 +14,7 @@ export default function Header() {
             width={120}     // scegli larghezza reale del tuo logo
             height={40}     // scegli altezza reale del tuo logo
             priority        // carica subito (essendo il logo è critico)
-            className="h-10 w-auto"
+            className="h-25 w-auto"
           />
         </Link>
 
