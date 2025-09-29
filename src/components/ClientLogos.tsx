@@ -3,26 +3,26 @@ import Image from "next/image";
 type ClientItem = {
   src: string;
   alt: string;
-  width?: number;   // intrinseci per riservare spazio
+  width?: number;
   height?: number;
   scale?: number;   // 1 = base, <1 più piccolo, >1 più grande
 };
 
 export default function ClientLogos() {
   const clients: ClientItem[] = [
-    { src: "/clienti/granapadano.png", alt: "Grana Padano", width: 320, height: 160, scale: 1.1 },
-    { src: "/clienti/parconaturaviva.png", alt: "Parco Natura Viva", width: 320, height: 160, scale: 1 },
-    { src: "/clienti/shulz.png", alt: "Shulz", width: 320, height: 160, scale: 1.5 },
-    { src: "/clienti/pivagroup.png", alt: "Piva Group", width: 320, height: 160, scale: 1.1 },
-    { src: "/clienti/askoll.png", alt: "Askoll", width: 320, height: 160, scale: 1 },
-    { src: "/clienti/safariravenna.png", alt: "Safari Ravenna", width: 320, height: 160, scale: 0.8 },
-    { src: "/clienti/fiabilandia.png", alt: "Fiabilandia", width: 320, height: 160, scale: 0.8 },
-    { src: "/clienti/cinecittaworld.png", alt: "Cinecittà World", width: 320, height: 160, scale: 1.15 },
+    { src: "/clienti/granapadano.png", alt: "Logo Grana Padano", width: 320, height: 160, scale: 1.1 },
+    { src: "/clienti/parconaturaviva.png", alt: "Logo Parco Natura Viva", width: 320, height: 160, scale: 1 },
+    { src: "/clienti/shulz.png", alt: "Logo Shulz", width: 320, height: 160, scale: 1.5 },
+    { src: "/clienti/pivagroup.png", alt: "Logo Piva Group", width: 320, height: 160, scale: 1.1 },
+    { src: "/clienti/askoll.png", alt: "Logo Askoll", width: 320, height: 160, scale: 1 },
+    { src: "/clienti/safariravenna.png", alt: "Logo Safari Ravenna", width: 320, height: 160, scale: 0.8 },
+    { src: "/clienti/fiabilandia.png", alt: "Logo Fiabilandia", width: 320, height: 160, scale: 0.8 },
+    { src: "/clienti/cinecittaworld.png", alt: "Logo Cinecittà World", width: 320, height: 160, scale: 1.15 },
   ];
 
   return (
     <section id="clienti" className="py-16 bg-black">
-      <h2 className="text-center font-serif text-2xl text-[#e6d39a] mb-12">
+      <h2 className="text-center font-serif text-2xl text-[#f0e2a0] font-bold mb-12">
         Alcuni clienti
       </h2>
 

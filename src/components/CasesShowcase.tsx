@@ -1,3 +1,4 @@
+// components/CasesShowcase.tsx
 import Image from "next/image";
 
 export default function CasesShowcase() {
@@ -49,7 +50,11 @@ export default function CasesShowcase() {
   return (
     <section id="casi" className="relative py-20 bg-black">
       <div className="mx-auto max-w-6xl px-6 text-center">
-        <h2 className="text-3xl font-serif text-[#e6d39a] mb-12">Casi reali</h2>
+        {/* CONTRASTO MIGLIORATO */}
+        <h2 className="text-3xl font-serif text-[#f0e2a0] font-bold mb-12">
+          Casi reali
+        </h2>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
           {cases.map((c) => (
             <div

@@ -1,3 +1,4 @@
+// components/Steps.tsx
 import Link from "next/link";
 
 export default function Steps() {
@@ -11,20 +12,19 @@ export default function Steps() {
     {
       n: "2",
       title: "Fatturazione",
-      text:
-        "Come funziona a livello fiscale?",
+      text: "Come funziona a livello fiscale?",
     },
     {
       n: "3",
       title: "On-Air",
-      text:
-        "Stabilito tutto siamo pronti ad uscire sui media concordati.",
+      text: "Stabilito tutto siamo pronti ad uscire sui media concordati.",
     },
   ];
 
   return (
     <section id="come-funziona" className="relative py-16">
       <div className="mx-auto max-w-6xl px-6">
+        {/* Titolo sezione accessibile ma nascosto */}
         <h2 className="sr-only">Come funziona</h2>
 
         {/* Cards */}
@@ -45,7 +45,7 @@ export default function Steps() {
                          focus-visible:ring-[#e6d39a]/40"
             >
               <div className="text-4xl font-semibold text-[#e6d39a]">{s.n}</div>
-              <div className="mt-3 text-xl font-bold">{s.title}</div>
+              <h3 className="mt-3 text-xl font-bold">{s.title}</h3>
               <p className="mt-3 text-zinc-300 leading-relaxed">{s.text}</p>
 
               {s.n === "1" && (
