@@ -1,15 +1,8 @@
-// app/page.tsx
+// src/app/page.tsx
 import Image from "next/image";
-import dynamic from "next/dynamic";
-
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-
-// Blocchi sotto la piega -> code-splitting / lazy (NO SSR)
-const MediaLogos    = dynamic(() => import("../components/MediaLogos"),    { ssr: false, loading: () => null });
-const Steps         = dynamic(() => import("../components/Steps"),         { ssr: false, loading: () => null });
-const CasesShowcase = dynamic(() => import("../components/CasesShowcase"), { ssr: false, loading: () => null });
-const ClientLogos   = dynamic(() => import("../components/ClientLogos"),   { ssr: false, loading: () => null });
+import BelowFold from "../components/BelowFold"; // ⬅️ nuovo
 
 export default function HomePage() {
   return (
@@ -18,9 +11,7 @@ export default function HomePage() {
 
       {/* HERO */}
       <section className="relative isolate overflow-hidden pt-24 md:pt-28">
-        {/* Radiale alleggerita su mobile (meno paint) */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#8b5c20_0%,transparent_55%)] opacity-20 md:opacity-40" />
-
         <div className="relative mx-auto max-w-7xl px-4 md:px-6 pb-12 md:pb-16">
           <div className="mx-auto text-center">
             <Image
@@ -69,21 +60,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* LOGHI MEDIA */}
-      <MediaLogos />
-
-      {/* COME FUNZIONA */}
-      <section id="come-funziona">
-        <Steps />
-      </section>
-
-      {/* CASI REALI */}
-      <section id="casi">
-        <CasesShowcase />
-      </section>
-
-      {/* CLIENTI */}
-      <ClientLogos />
+      {/* Sotto la piega (client + ssr:false dentro) */}
+      <BelowFold />
 
       <Footer />
     </main>
