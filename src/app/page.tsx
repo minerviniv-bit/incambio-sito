@@ -1,15 +1,15 @@
-// src/app/page.tsx
+// app/page.tsx
 import Image from "next/image";
 import dynamic from "next/dynamic";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-// Blocchi sotto la piega -> lazy ma server (meno JS nel client)
-const MediaLogos    = dynamic(() => import("../components/MediaLogos"),    { loading: () => null });
-const Steps         = dynamic(() => import("../components/Steps"),         { loading: () => null });
-const CasesShowcase = dynamic(() => import("../components/CasesShowcase"), { loading: () => null });
-const ClientLogos   = dynamic(() => import("../components/ClientLogos"),   { loading: () => null });
+// Blocchi sotto la piega -> code-splitting / lazy
+const MediaLogos = dynamic(() => import("../components/MediaLogos"), { ssr: false, loading: () => null });
+const Steps = dynamic(() => import("../components/Steps"), { ssr: false, loading: () => null });
+const CasesShowcase = dynamic(() => import("../components/CasesShowcase"), { ssr: false, loading: () => null });
+const ClientLogos = dynamic(() => import("../components/ClientLogos"), { ssr: false, loading: () => null });
 
 export default function HomePage() {
   return (
@@ -23,17 +23,16 @@ export default function HomePage() {
 
         <div className="relative mx-auto max-w-7xl px-4 md:px-6 pb-12 md:pb-16">
           <div className="mx-auto text-center">
-
-            {/* FIX CLS: riservo lo spazio con aspect-ratio e uso Image fill */}
-            <div className="mx-auto w-full max-w-6xl aspect-[1080/1350] relative">
+            {/* IMMAGINE HERO FULLSCREEN */}
+            <div className="relative w-full h-[100vh] md:h-[80vh]">
               <Image
                 src="/images/Settembre-2025.png"
                 alt="Calice di vino – Trasforma il tuo prodotto in visibilità"
                 fill
                 priority
                 fetchPriority="high"
-                sizes="(max-width: 640px) 100vw, (max-width: 1200px) 80vw, 1080px"
-                className="object-contain"
+                sizes="100vw"
+                className="object-cover"
               />
             </div>
 
