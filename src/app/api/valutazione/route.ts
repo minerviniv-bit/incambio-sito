@@ -10,24 +10,22 @@ function env(name: string) {
   return v;
 }
 
-function s(v: unknown): string {
+function toStr(v: unknown): string {
   if (v === null || v === undefined) return "";
   return typeof v === "string" ? v : String(v);
 }
 
 async function parseBody(req: NextRequest): Promise<Record<string, string>> {
   const ct = req.headers.get("content-type") || "";
+  // JSON
   if (ct.includes("application/json")) {
     const data = (await req.json()) as Record<string, unknown>;
     const out: Record<string, string> = {};
-    Object.keys(data || {}).forEach((k) => (out[k] = s(data[k])));
+    Object.keys(data || {}).forEach((k) => (out[k] = toStr(data[k])));
     return out;
   }
-
-  if (
-    ct.includes("application/x-www-form-urlencoded") ||
-    ct.includes("multipart/form-data")
-  ) {
+  // Form (multipart/urlencoded)
+  if (ct.includes("application/x-www-form-urlencoded") || ct.includes("multipart/form-data")) {
     const fd = await req.formData();
     const obj: Record<string, string> = {};
     fd.forEach((value, key) => {
@@ -35,11 +33,11 @@ async function parseBody(req: NextRequest): Promise<Record<string, string>> {
     });
     return obj;
   }
-
+  // Fallback
   try {
     const data = (await req.json()) as Record<string, unknown>;
     const out: Record<string, string> = {};
-    Object.keys(data || {}).forEach((k) => (out[k] = s(data[k])));
+    Object.keys(data || {}).forEach((k) => (out[k] = toStr(data[k])));
     return out;
   } catch {
     return {};
@@ -48,10 +46,7 @@ async function parseBody(req: NextRequest): Promise<Record<string, string>> {
 
 export async function POST(req: NextRequest) {
   try {
-    console.log("[VALUTAZIONE] start", req.method, req.headers.get("content-type"));
-
     const body = await parseBody(req);
-    console.log("[VALUTAZIONE] body-keys", Object.keys(body || {}));
 
     const {
       name,
@@ -69,6 +64,7 @@ export async function POST(req: NextRequest) {
       privacy,
     } = body;
 
+    // ENV
     const SMTP_HOST = env("SMTP_HOST");
     const SMTP_PORT = parseInt(env("SMTP_PORT"), 10);
     const SMTP_USER = env("SMTP_USER");
@@ -76,25 +72,18 @@ export async function POST(req: NextRequest) {
     const MAIL_FROM = env("MAIL_FROM");
     const MAIL_TO = env("MAIL_TO");
 
-    console.log("[VALUTAZIONE] env-check", {
-      SMTP_HOST,
-      SMTP_PORT,
-      MAIL_FROM,
-      MAIL_TO,
-    });
-
+    // Transport (Register/Webnode: certificato su securemail.pro)
     const transporter = nodemailer.createTransport({
       host: SMTP_HOST,
       port: SMTP_PORT,
       secure: SMTP_PORT === 465, // 465=SSL, 587=STARTTLS
       auth: { user: SMTP_USER, pass: SMTP_PASS },
-      tls: { servername: "authsmtp.securemail.pro" }, // fix certificato Register
+      tls: { servername: "authsmtp.securemail.pro" },
     });
 
     await transporter.verify();
-    console.log("[VALUTAZIONE] transporter OK");
 
-    const subject = `Valutazione — ${s(company) || "Azienda"} — ${s(name) || "N/D"}`;
+    const subject = `Valutazione — ${toStr(company) || "Azienda"} — ${toStr(name) || "N/D"}`;
     const rows: Array<[string, unknown]> = [
       ["Azienda", company],
       ["Nome", name],
@@ -113,26 +102,24 @@ export async function POST(req: NextRequest) {
 
     const html =
       `<h2>Richiesta valutazione</h2>` +
-      rows.map(([k, v]) => `<p><b>${k}:</b> ${s(v)}</p>`).join("");
+      rows.map(([k, v]) => `<p><b>${k}:</b> ${toStr(v)}</p>`).join("");
 
     const text =
       `Richiesta valutazione\n` +
-      rows.map(([k, v]) => `${k}: ${s(v)}`).join("\n");
+      rows.map(([k, v]) => `${k}: ${toStr(v)}`).join("\n");
 
     const info = await transporter.sendMail({
       from: MAIL_FROM,
       to: MAIL_TO,
-      replyTo: s(email) || MAIL_FROM,
+      replyTo: toStr(email) || MAIL_FROM,
       subject,
       text,
       html,
     });
 
-    console.log("[VALUTAZIONE] mail sent", info.messageId);
     return NextResponse.json({ ok: true, id: info.messageId });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
-    console.error("[VALUTAZIONE] ERROR:", msg);
     return NextResponse.json({ ok: false, error: msg }, { status: 500 });
   }
 }
