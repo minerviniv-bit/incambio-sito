@@ -1,18 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Inter } from "next/font/google"; // 👉 se preferisci Geist, puoi cambiare qui
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Configura il font scelto
+const inter = Inter({
   subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-// 🔥 METADATA GLOBALI SEO
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.incambio.eu"),
   title: {
@@ -53,14 +49,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="it">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      {/* 👇 il font viene applicato qui, niente più Arial in globals.css */}
+      <body className={`${inter.className} antialiased`}>
         {children}
       </body>
     </html>
