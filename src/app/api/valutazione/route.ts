@@ -1,133 +1,121 @@
-import { NextResponse } from "next/server";
+// /src/app/api/valutazione/route.ts
+import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-import fs from "fs";
 
-export async function POST(req: Request) {
+export const runtime = "nodejs"; // evita edge: Nodemailer vuole Node
+
+function env(name: string) {
+  const v = process.env[name];
+  if (!v) throw new Error(`Missing ENV ${name}`);
+  return v;
+}
+
+async function parseBody(req: NextRequest) {
+  const ct = req.headers.get("content-type") || "";
+  if (ct.includes("application/json")) {
+    return await req.json();
+  }
+  if (
+    ct.includes("application/x-www-form-urlencoded") ||
+    ct.includes("multipart/form-data")
+  ) {
+    const fd = await req.formData();
+    const obj: Record<string, any> = {};
+    fd.forEach((v, k) => (obj[k] = v));
+    return obj;
+  }
+  // fallback
   try {
-    const formData = await req.formData();
+    return await req.json();
+  } catch {
+    return {};
+  }
+}
 
-    // Campi principali
-    const company = formData.get("company") as string | null;
-    const name = formData.get("name") as string | null;
-    const email = formData.get("email") as string | null;
-    const phone = formData.get("phone") as string | null;
-    const website = formData.get("website") as string | null;
-    const asset = formData.get("asset") as string | null;
-    const qty = formData.get("qty") as string | null;
-    const value = formData.get("value") as string | null;
-    const deadline = formData.get("deadline") as string | null;
-    const goals = formData.get("goals") as string | null;
+export async function POST(req: NextRequest) {
+  // 🔹 PING TEMPORANEO
+  console.log(
+    "[VALUTAZIONE] start",
+    req.method,
+    req.headers.get("content-type")
+  );
+  return NextResponse.json({ ok: true, ping: true }, { status: 200 });
+  // --- tutto il resto sotto per ora non verrà eseguito ---
 
-    // 🔑 Checkbox multipli → array
-    const channels = formData.getAll("channels") as string[];
+  try {
+    const body = await parseBody(req);
 
-    // 🔑 File allegato
-    const file = formData.get("file") as File | null;
-    let savedFilePath: string | null = null;
-
-    if (file && file.size > 0) {
-      if (file.size > 5 * 1024 * 1024) {
-        return NextResponse.json(
-          { ok: false, message: "File troppo grande (max 5MB)" },
-          { status: 400 }
-        );
-      }
-
-      if (
-        !["application/pdf", "image/png", "image/jpeg"].includes(file.type)
-      ) {
-        return NextResponse.json(
-          { ok: false, message: "Formato file non consentito" },
-          { status: 400 }
-        );
-      }
-
-      // Salvataggio locale (solo se serve — altrimenti puoi uploadare su S3 o simili)
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      savedFilePath = `./uploads/${Date.now()}-${file.name}`;
-      await fs.promises.writeFile(savedFilePath, buffer);
-    }
-
-    // ✅ Controllo campi obbligatori
-    if (!company || !name || !email || !asset) {
-      return NextResponse.json(
-        { ok: false, message: "Campi obbligatori mancanti" },
-        { status: 400 }
-      );
-    }
-
-    // Config SMTP
     const {
-      SMTP_HOST,
-      SMTP_PORT,
-      SMTP_USER,
-      SMTP_PASS,
-      MAIL_TO = "info@incambio.eu",
-      MAIL_FROM = SMTP_USER || "no-reply@incambio.eu",
-    } = process.env as Record<string, string>;
+      name,
+      email,
+      phone,
+      company,
+      website,
+      item,
+      value,
+      quantity,
+      media,
+      area,
+      period,
+      message,
+      privacy,
+    } = body ?? {};
 
-    if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS) {
-      console.warn("[VALUTAZIONE] SMTP non configurato. Log dei dati:", {
-        company,
-        name,
-        email,
-        phone,
-        website,
-        asset,
-        qty,
-        value,
-        deadline,
-        goals,
-        channels,
-        file: savedFilePath,
-      });
-      return NextResponse.json({
-        ok: true,
-        message: "Richiesta acquisita ma SMTP non configurato.",
-      });
-    }
+    const SMTP_HOST = env("SMTP_HOST");
+    const SMTP_PORT = parseInt(env("SMTP_PORT"), 10);
+    const SMTP_USER = env("SMTP_USER");
+    const SMTP_PASS = env("SMTP_PASS");
+    const MAIL_FROM = env("MAIL_FROM");
+    const MAIL_TO = env("MAIL_TO");
 
     const transporter = nodemailer.createTransport({
       host: SMTP_HOST,
-      port: Number(SMTP_PORT),
-      secure: Number(SMTP_PORT) === 465,
+      port: SMTP_PORT,
+      secure: SMTP_PORT === 465, // 465=SSL, 587=STARTTLS
       auth: { user: SMTP_USER, pass: SMTP_PASS },
     });
 
-    const testo = `
-Nuova richiesta di valutazione:
+    await transporter.verify();
 
-Azienda: ${company}
-Nome: ${name}
-Email: ${email}
-Telefono: ${phone || "-"}
-Sito web: ${website || "-"}
+    const subject = `Valutazione — ${company ?? "Azienda"} — ${name ?? "N/D"}`;
+    const rows = [
+      ["Azienda", company],
+      ["Nome", name],
+      ["Email", email],
+      ["Telefono", phone],
+      ["Sito", website],
+      ["Cosa scambiare", item],
+      ["Quantità", quantity],
+      ["Valore stimato", value],
+      ["Media/Canali", media],
+      ["Area", area],
+      ["Periodo", period],
+      ["Messaggio", message],
+      ["Privacy", privacy],
+    ];
 
-Merce: ${asset}
-Quantità: ${qty || "-"}
-Valore stimato: ${value || "-"}
-Scadenza: ${deadline || "-"}
+    const html =
+      `<h2>Richiesta valutazione</h2>` +
+      rows.map(([k, v]) => `<p><b>${k}:</b> ${v ?? ""}</p>`).join("");
 
-Obiettivi: ${goals || "-"}
-Canali preferiti: ${channels.length > 0 ? channels.join(", ") : "-"}
+    const text =
+      `Richiesta valutazione\n` +
+      rows.map(([k, v]) => `${k}: ${v ?? ""}`).join("\n");
 
-File allegato: ${savedFilePath || "Nessuno"}
-    `.trim();
-
-    await transporter.sendMail({
-      from: `"InCambio" <${MAIL_FROM}>`,
+    const info = await transporter.sendMail({
+      from: MAIL_FROM,
       to: MAIL_TO,
       replyTo: email || MAIL_FROM,
-      subject: `Richiesta valutazione – ${company} (${name})`,
-      text: testo,
+      subject,
+      text,
+      html,
     });
 
-    return NextResponse.json({ ok: true }, { status: 200 });
-  } catch (err) {
-    console.error("[VALUTAZIONE] Errore generale:", err);
+    return NextResponse.json({ ok: true, id: info.messageId });
+  } catch (err: any) {
+    console.error("[VALUTAZIONE] ERROR:", err?.message || err);
     return NextResponse.json(
-      { ok: false, message: "Errore interno durante l'invio." },
+      { ok: false, error: err?.message || "Send failed" },
       { status: 500 }
     );
   }
