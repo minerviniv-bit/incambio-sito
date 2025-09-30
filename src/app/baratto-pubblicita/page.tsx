@@ -1,6 +1,7 @@
 // src/app/baratto-pubblicita/page.tsx
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Baratto pubblicitario (media barter) | inCambio",
@@ -70,8 +71,18 @@ export default function Page() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.incambio.eu/" },
-      { "@type": "ListItem", position: 2, name: "Baratto pubblicitario", item: "https://www.incambio.eu/baratto-pubblicita" },
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://www.incambio.eu/",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Baratto pubblicitario",
+        item: "https://www.incambio.eu/baratto-pubblicita",
+      },
     ],
   };
 
@@ -103,7 +114,9 @@ export default function Page() {
         <h2 className="mt-10 text-2xl font-semibold text-white">Vantaggi</h2>
         <ul className="mt-4 list-disc pl-5 text-zinc-300 space-y-2">
           <li>Monetizzi stock o servizi trasformandoli in visibilità.</li>
-          <li>Accedi a <strong>campagne media</strong> di qualità senza esborso cash.</li>
+          <li>
+            Accedi a <strong>campagne media</strong> di qualità senza esborso cash.
+          </li>
           <li>Ottieni report KPI e ottimizzazioni come in un acquisto tradizionale.</li>
           <li>Snellisci logistica e amministrazione con processi semplici.</li>
         </ul>
@@ -117,37 +130,34 @@ export default function Page() {
         </p>
 
         <div className="mt-8 flex flex-wrap gap-4">
-          <a
+          <Link
             href="/valutazione"
             className="rounded-2xl border border-[#e6d39a]/60 bg-[#e6d39a]/10 px-6 py-3 text-[#e6d39a] hover:bg-[#e6d39a]/20"
           >
             Richiedi una valutazione gratuita
-          </a>
-          <a
-            href="/contatti"
-            className="rounded-2xl bg-white/5 px-6 py-3 hover:bg-white/10"
-          >
+          </Link>
+          <Link href="/contatti" className="rounded-2xl bg-white/5 px-6 py-3 hover:bg-white/10">
             Contattaci
-          </a>
+          </Link>
         </div>
 
         <p className="mt-10 text-sm text-zinc-400">
           Correlati:{" "}
-          <a href="/cambio-merce" className="underline decoration-[#e6d39a]/70">
+          <Link href="/cambio-merce" className="underline decoration-[#e6d39a]/70">
             cambio merce
-          </a>{" "}
+          </Link>{" "}
           •{" "}
-          <a href="/pubblicita-cambio-merce" className="underline decoration-[#e6d39a]/70">
+          <Link href="/pubblicita-cambio-merce" className="underline decoration-[#e6d39a]/70">
             pubblicità in cambio merce
-          </a>{" "}
+          </Link>{" "}
           •{" "}
-          <a href="/pubblicita-tv" className="underline decoration-[#e6d39a]/70">
+          <Link href="/pubblicita-tv" className="underline decoration-[#e6d39a]/70">
             pubblicità TV
-          </a>{" "}
+          </Link>{" "}
           •{" "}
-          <a href="/pubblicita-radio" className="underline decoration-[#e6d39a]/70">
+          <Link href="/pubblicita-radio" className="underline decoration-[#e6d39a]/70">
             pubblicità Radio
-          </a>
+          </Link>
         </p>
       </section>
     </main>

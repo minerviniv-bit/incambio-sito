@@ -1,6 +1,7 @@
 // src/app/cambio-merce/page.tsx
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 
 // ---------- METADATA ----------
 export const metadata: Metadata = {
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
         url: "https://www.incambio.eu/images/Settembre-2025.png",
         width: 1200,
         height: 630,
-        alt: "inCambio – Cambio merce per la pubblicità",
+        alt: "inCambio — Cambio merce per la pubblicità",
       },
     ],
   },
@@ -34,8 +35,8 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-// ---------- JSON-LD helper ----------
-function JsonLd({ data }: { data: Record<string, any> }) {
+// ---------- JSON-LD utility ----------
+function JsonLd({ data }: { data: Record<string, unknown> }) {
   return (
     <script
       type="application/ld+json"
@@ -48,53 +49,56 @@ function JsonLd({ data }: { data: Record<string, any> }) {
 const SERVICE_JSON_LD = {
   "@context": "https://schema.org",
   "@type": "Service",
-  "name": "Cambio merce per la pubblicità",
-  "serviceType": "Media barter / cambio merce per campagne pubblicitarie",
-  "description":
-    "Valutazione stock o servizi e conversione in credito media per campagne su TV, Radio, Digital e affissioni. KPI e reportistica.",
-  "areaServed": [{ "@type": "Country", "name": "Italia" }],
-  "url": "https://www.incambio.eu/cambio-merce",
-  "provider": { "@id": "https://www.incambio.eu/#org" }
+  name: "Cambio merce per la pubblicità",
+  serviceType: "Media barter / cambio merce per campagne pubblicitarie",
+  description:
+    "Valutazione di stock o servizi e conversione in credito media per campagne su TV, Radio, Digital e affissioni. KPI e reportistica.",
+  areaServed: [{ "@type": "Country", name: "Italia" }],
+  url: "https://www.incambio.eu/cambio-merce",
+  provider: { "@id": "https://www.incambio.eu/#org" },
 };
 
 const BREADCRUMB_JSON_LD = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.incambio.eu/" },
-    { "@type": "ListItem", "position": 2, "name": "Cambio merce", "item": "https://www.incambio.eu/cambio-merce" }
-  ]
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.incambio.eu/" },
+    { "@type": "ListItem", position: 2, name: "Cambio merce", item: "https://www.incambio.eu/cambio-merce" },
+  ],
 };
 
 const FAQ_JSON_LD = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "mainEntity": [
+  mainEntity: [
     {
       "@type": "Question",
-      "name": "Come funziona il cambio merce?",
-      "acceptedAnswer": {
+      name: "Come funziona il cambio merce?",
+      acceptedAnswer: {
         "@type": "Answer",
-        "text": "Valutiamo prodotti o servizi e li convertiamo in un credito media. Con questo credito pianifichiamo campagne su TV, Radio, Digital e affissioni, con KPI e report."
-      }
+        text:
+          "Valutiamo prodotti o servizi e li convertiamo in un credito media. Con questo credito pianifichiamo campagne su TV, Radio, Digital e affissioni, con KPI e report.",
+      },
     },
     {
       "@type": "Question",
-      "name": "Che cosa posso cedere in cambio?",
-      "acceptedAnswer": {
+      name: "Che cosa posso cedere in cambio?",
+      acceptedAnswer: {
         "@type": "Answer",
-        "text": "Prodotti finiti, servizi, voucher e capacità inutilizzata (es. notti hotel). La fattibilità dipende da rivendibilità e logistica."
-      }
+        text:
+          "Prodotti finiti, servizi, voucher e capacità inutilizzata (es. notti hotel). La fattibilità dipende da rivendibilità e logistica.",
+      },
     },
     {
       "@type": "Question",
-      "name": "È conveniente rispetto al cash?",
-      "acceptedAnswer": {
+      name: "È conveniente rispetto al cash?",
+      acceptedAnswer: {
         "@type": "Answer",
-        "text": "Se hai stock o servizi valorizzabili, sì: attivi campagne senza esborso immediato, mantenendo qualità della pianificazione e controllo dei KPI."
-      }
-    }
-  ]
+        text:
+          "Se hai stock o servizi valorizzabili, sì: attivi campagne senza esborso immediato, mantenendo qualità della pianificazione e controllo dei KPI.",
+      },
+    },
+  ],
 };
 
 // ---------- PAGINA ----------
@@ -107,7 +111,9 @@ export default function Page() {
         className="mx-auto max-w-5xl px-6 pt-24 text-sm text-zinc-400"
       >
         <ol className="flex gap-2">
-          <li><a href="/" className="hover:text-white">Home</a></li>
+          <li>
+            <Link href="/" className="hover:text-white">Home</Link>
+          </li>
           <li aria-hidden>›</li>
           <li className="text-zinc-300">Cambio merce</li>
         </ol>
@@ -122,9 +128,9 @@ export default function Page() {
         <p className="mt-4 max-w-3xl text-zinc-300">
           Con il <strong>cambio merce</strong> convertiamo il valore dei tuoi
           prodotti o servizi in un <strong>credito media</strong> da utilizzare
-          per campagne su <strong>TV</strong>, <strong>Radio</strong>, <strong>Digital</strong> e{" "}
-          <strong>affissioni</strong>. Definiamo KPI e forniamo report con
-          ottimizzazioni in corso d’opera.
+          per campagne su <strong>TV</strong>, <strong>Radio</strong>,{" "}
+          <strong>Digital</strong> e <strong>affissioni</strong>. Definiamo KPI
+          e forniamo report con ottimizzazioni in corso d’opera.
         </p>
 
         <div className="mt-8">
@@ -139,18 +145,18 @@ export default function Page() {
         </div>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <a
+          <Link
             href="/valutazione"
             className="rounded-2xl border border-[#e6d39a]/60 bg-[#e6d39a]/10 px-5 py-2.5 text-[#e6d39a] hover:bg-[#e6d39a]/20 transition"
           >
             Richiedi una valutazione
-          </a>
-          <a
+          </Link>
+          <Link
             href="/contatti"
             className="rounded-2xl bg-white/5 px-5 py-2.5 text-white hover:bg-white/10 transition"
           >
             Contattaci
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -167,50 +173,44 @@ export default function Page() {
         {/* Link interni */}
         <p className="mt-6 text-zinc-300">
           Approfondisci:{" "}
-          <a href="/pubblicita-cambio-merce" className="underline decoration-[#e6d39a]/70">
+          <Link href="/pubblicita-cambio-merce" className="underline decoration-[#e6d39a]/70">
             pubblicità in cambio merce
-          </a>
-          {" • "}
-          <a href="/baratto-pubblicita" className="underline decoration-[#e6d39a]/70">
+          </Link>{" "}
+          •{" "}
+          <Link href="/baratto-pubblicita" className="underline decoration-[#e6d39a]/70">
             baratto pubblicitario
-          </a>
-          {" • "}
-          <a href="/pubblicita-tv" className="underline decoration-[#e6d39a]/70">
+          </Link>{" "}
+          •{" "}
+          <Link href="/pubblicita-tv" className="underline decoration-[#e6d39a]/70">
             pubblicità TV
-          </a>
-          {" • "}
-          <a href="/pubblicita-radio" className="underline decoration-[#e6d39a]/70">
+          </Link>{" "}
+          •{" "}
+          <Link href="/pubblicita-radio" className="underline decoration-[#e6d39a]/70">
             pubblicità Radio
-          </a>
+          </Link>
           .
         </p>
       </section>
 
-      {/* FAQ */}
+      {/* FAQ (visibili) */}
       <section className="mx-auto max-w-5xl px-6 pb-20">
         <h2 className="text-2xl font-semibold text-white">Domande frequenti</h2>
         <div className="mt-6 space-y-5">
           <details className="rounded-lg border border-white/10 bg-white/[0.02] p-4">
-            <summary className="cursor-pointer text-white">
-              Come funziona il cambio merce?
-            </summary>
+            <summary className="cursor-pointer text-white">Come funziona il cambio merce?</summary>
             <p className="mt-3 text-zinc-300">
               Convertiamo beni o servizi in un credito media e lo impieghiamo su
               TV, Radio, Digital e affissioni con KPI chiari e report.
             </p>
           </details>
           <details className="rounded-lg border border-white/10 bg-white/[0.02] p-4">
-            <summary className="cursor-pointer text-white">
-              Cosa posso cedere in cambio?
-            </summary>
+            <summary className="cursor-pointer text-white">Cosa posso cedere in cambio?</summary>
             <p className="mt-3 text-zinc-300">
               Prodotti finiti, servizi, voucher o capacità inutilizzata.
             </p>
           </details>
           <details className="rounded-lg border border-white/10 bg-white/[0.02] p-4">
-            <summary className="cursor-pointer text-white">
-              È conveniente rispetto al cash?
-            </summary>
+            <summary className="cursor-pointer text-white">È conveniente rispetto al cash?</summary>
             <p className="mt-3 text-zinc-300">
               Se hai stock o servizi valorizzabili, puoi attivare campagne
               senza esborso immediato mantenendo qualità e controllo dei KPI.

@@ -1,15 +1,16 @@
 // src/app/pubblicita-radio/page.tsx
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 
 // ---------- METADATA ----------
 export const metadata: Metadata = {
-  title: "Pubblicità Radio: spot su emittenti locali e nazionali | inCambio",
+  title: "Pubblicità Radio: spot locali e nazionali | inCambio",
   description:
     "Pianificazione spot radio su emittenti locali e nazionali. Strategia media, acquisto spazi, copy e KPI. Possibile pagamento in cambio merce.",
   alternates: { canonical: "https://www.incambio.eu/pubblicita-radio" },
   openGraph: {
-    title: "Pubblicità Radio: spot su emittenti locali e nazionali | inCambio",
+    title: "Pubblicità Radio: spot locali e nazionali | inCambio",
     description:
       "Acquisto spazi, pianificazione flight e copywriting spot. KPI chiari e ottimizzazioni. Anche in cambio merce.",
     url: "https://www.incambio.eu/pubblicita-radio",
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pubblicità Radio: spot su emittenti locali e nazionali | inCambio",
+    title: "Pubblicità Radio: spot locali e nazionali | inCambio",
     description:
       "Pianificazione spot radio con KPI e ottimizzazioni. Possibilità di cambio merce.",
     images: ["https://www.incambio.eu/images/Settembre-2025.png"],
@@ -34,67 +35,70 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-// ---------- JSON-LD ----------
-function JsonLd({ data }: { data: Record<string, any> }) {
+// ---------- JSON-LD utility ----------
+function JsonLd({ data }: { data: Record<string, unknown> }) {
   return (
     <script
       type="application/ld+json"
-      // @ts-ignore
       dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
     />
   );
 }
 
+// ---------- SCHEMA.ORG ----------
 const SERVICE_JSON_LD = {
   "@context": "https://schema.org",
   "@type": "Service",
-  "name": "Pubblicità Radio",
-  "serviceType": "Radio advertising (local & national)",
-  "description":
+  name: "Pubblicità Radio",
+  serviceType: "Radio advertising (local & national)",
+  description:
     "Pianificazione di spot radiofonici su emittenti locali e nazionali: strategia, acquisto spazi, copy, KPI e ottimizzazioni. Possibile pagamento in cambio merce.",
-  "areaServed": [{ "@type": "Country", "name": "Italia" }],
-  "url": "https://www.incambio.eu/pubblicita-radio",
-  "provider": { "@id": "https://www.incambio.eu/#org" }
+  areaServed: [{ "@type": "Country", name: "Italia" }],
+  url: "https://www.incambio.eu/pubblicita-radio",
+  provider: { "@id": "https://www.incambio.eu/#org" },
 };
 
 const BREADCRUMB_JSON_LD = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
-  "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.incambio.eu/" },
-    { "@type": "ListItem", "position": 2, "name": "Pubblicità Radio", "item": "https://www.incambio.eu/pubblicita-radio" }
-  ]
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.incambio.eu/" },
+    { "@type": "ListItem", position: 2, name: "Pubblicità Radio", item: "https://www.incambio.eu/pubblicita-radio" },
+  ],
 };
 
 const FAQ_JSON_LD = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "mainEntity": [
+  mainEntity: [
     {
       "@type": "Question",
-      "name": "Quanto costa uno spot radio?",
-      "acceptedAnswer": {
+      name: "Quanto costa uno spot radio?",
+      acceptedAnswer: {
         "@type": "Answer",
-        "text": "Dipende da emittente, fascia oraria, formato e periodo. Creiamo un planning con stime di copertura e frequenza prima dell’acquisto spazi."
-      }
+        text:
+          "Dipende da emittente, fascia oraria, formato e periodo. Creiamo un planning con stime di copertura e frequenza prima dell’acquisto spazi.",
+      },
     },
     {
       "@type": "Question",
-      "name": "Posso pagare con cambio merce (barter)?",
-      "acceptedAnswer": {
+      name: "Posso pagare con cambio merce (barter)?",
+      acceptedAnswer: {
         "@type": "Answer",
-        "text": "Sì. In presenza di stock o servizi idonei, valutiamo formule in barter integrando amministrazione e logistica."
-      }
+        text:
+          "Sì. In presenza di stock o servizi idonei, valutiamo formule in barter integrando amministrazione e logistica.",
+      },
     },
     {
       "@type": "Question",
-      "name": "Che formati sono consigliati per gli spot?",
-      "acceptedAnswer": {
+      name: "Che formati sono consigliati per gli spot?",
+      acceptedAnswer: {
         "@type": "Answer",
-        "text": "I formati più utilizzati sono 15”, 20” e 30”. Definiamo copy e durata in base agli obiettivi di campagna e al budget."
-      }
-    }
-  ]
+        text:
+          "I formati più utilizzati sono 15”, 20” e 30”. Definiamo copy e durata in base agli obiettivi di campagna e al budget.",
+      },
+    },
+  ],
 };
 
 // ---------- PAGINA ----------
@@ -107,7 +111,9 @@ export default function Page() {
         className="mx-auto max-w-5xl px-6 pt-24 text-sm text-zinc-400"
       >
         <ol className="flex gap-2">
-          <li><a href="/" className="hover:text-white">Home</a></li>
+          <li>
+            <Link href="/" className="hover:text-white">Home</Link>
+          </li>
           <li aria-hidden>›</li>
           <li className="text-zinc-300">Pubblicità Radio</li>
         </ol>
@@ -139,26 +145,24 @@ export default function Page() {
         </div>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <a
+          <Link
             href="/valutazione"
             className="rounded-2xl border border-[#e6d39a]/60 bg-[#e6d39a]/10 px-5 py-2.5 text-[#e6d39a] hover:bg-[#e6d39a]/20 transition"
           >
             Richiedi una valutazione
-          </a>
-          <a
+          </Link>
+          <Link
             href="/contatti"
             className="rounded-2xl bg-white/5 px-5 py-2.5 text-white hover:bg-white/10 transition"
           >
             Contattaci
-          </a>
+          </Link>
         </div>
       </section>
 
       {/* CONTENUTO SEO */}
       <section className="mx-auto max-w-5xl px-6 pb-14">
-        <h2 className="text-2xl font-semibold text-white">
-          Cosa facciamo in Radio
-        </h2>
+        <h2 className="text-2xl font-semibold text-white">Cosa facciamo in Radio</h2>
         <ul className="mt-4 list-disc pl-5 text-zinc-300">
           <li>Analisi obiettivi e definizione <strong>strategia media</strong>.</li>
           <li>Planning e <strong>acquisto spazi</strong> su emittenti locali e nazionali.</li>
@@ -180,21 +184,21 @@ export default function Page() {
         {/* Link interni */}
         <p className="mt-6 text-zinc-300">
           Potrebbero interessarti:{" "}
-          <a href="/pubblicita-tv" className="underline decoration-[#e6d39a]/70">
+          <Link href="/pubblicita-tv" className="underline decoration-[#e6d39a]/70">
             pubblicità TV
-          </a>
-          {" • "}
-          <a href="/pubblicita-roma" className="underline decoration-[#e6d39a]/70">
+          </Link>{" "}
+          •{" "}
+          <Link href="/pubblicita-roma" className="underline decoration-[#e6d39a]/70">
             pubblicità a Roma
-          </a>
-          {" • "}
-          <a href="/pubblicita-cambio-merce" className="underline decoration-[#e6d39a]/70">
+          </Link>{" "}
+          •{" "}
+          <Link href="/pubblicita-cambio-merce" className="underline decoration-[#e6d39a]/70">
             pubblicità in cambio merce
-          </a>
-          {" • "}
-          <a href="/baratto-pubblicita" className="underline decoration-[#e6d39a]/70">
+          </Link>{" "}
+          •{" "}
+          <Link href="/baratto-pubblicita" className="underline decoration-[#e6d39a]/70">
             baratto pubblicitario
-          </a>
+          </Link>
           .
         </p>
       </section>
