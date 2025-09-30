@@ -5,11 +5,11 @@ import dynamic from "next/dynamic";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-// Blocchi sotto la piega -> lazy ma **server-side**
-const MediaLogos    = dynamic(() => import("../components/MediaLogos"),    { loading: () => null });
-const Steps         = dynamic(() => import("../components/Steps"),         { loading: () => null });
+// Blocchi sotto la piega -> code-splitting / lazy
+const MediaLogos = dynamic(() => import("../components/MediaLogos"), { loading: () => null });
+const Steps = dynamic(() => import("../components/Steps"), { loading: () => null });
 const CasesShowcase = dynamic(() => import("../components/CasesShowcase"), { loading: () => null });
-const ClientLogos   = dynamic(() => import("../components/ClientLogos"),   { loading: () => null });
+const ClientLogos = dynamic(() => import("../components/ClientLogos"), { loading: () => null });
 
 export default function HomePage() {
   return (
@@ -23,8 +23,8 @@ export default function HomePage() {
 
         <div className="relative mx-auto max-w-7xl px-4 md:px-6 pb-12 md:pb-16">
           <div className="mx-auto text-center">
-            {/* HERO fullscreen: 100vh mobile, 80vh desktop */}
-            <div className="relative w-full h-[100vh] md:h-[80vh]">
+            {/* IMMAGINE HERO FULLSCREEN con focus alto */}
+            <div className="relative w-full h-[100svh] md:h-[80vh]">
               <Image
                 src="/images/Settembre-2025.png"
                 alt="Calice di vino – Trasforma il tuo prodotto in visibilità"
@@ -32,7 +32,7 @@ export default function HomePage() {
                 priority
                 fetchPriority="high"
                 sizes="100vw"
-                className="object-cover"
+                className="object-cover object-top md:object-contain md:object-center"
               />
             </div>
 
