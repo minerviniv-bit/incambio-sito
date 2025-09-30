@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
-export const runtime = "nodejs"; // evita edge: Nodemailer vuole Node
+export const runtime = "nodejs"; // Nodemailer richiede Node.js, non Edge
 
 function env(name: string) {
   const v = process.env[name];
@@ -24,7 +24,6 @@ async function parseBody(req: NextRequest) {
     fd.forEach((v, k) => (obj[k] = v));
     return obj;
   }
-  // fallback
   try {
     return await req.json();
   } catch {
@@ -33,17 +32,16 @@ async function parseBody(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  // 🔹 PING TEMPORANEO
-  console.log(
-    "[VALUTAZIONE] start",
-    req.method,
-    req.headers.get("content-type")
-  );
-  return NextResponse.json({ ok: true, ping: true }, { status: 200 });
-  // --- tutto il resto sotto per ora non verrà eseguito ---
-
   try {
+    // 🔹 Log iniziale
+    console.log(
+      "[VALUTAZIONE] start",
+      req.method,
+      req.headers.get("content-type")
+    );
+
     const body = await parseBody(req);
+    console.log("[VALUTAZIONE] body-keys", Object.keys(body || {}));
 
     const {
       name,
@@ -68,14 +66,23 @@ export async function POST(req: NextRequest) {
     const MAIL_FROM = env("MAIL_FROM");
     const MAIL_TO = env("MAIL_TO");
 
+    console.log("[VALUTAZIONE] env-check", {
+      SMTP_HOST,
+      SMTP_PORT,
+      MAIL_FROM,
+      MAIL_TO,
+    });
+
     const transporter = nodemailer.createTransport({
       host: SMTP_HOST,
       port: SMTP_PORT,
-      secure: SMTP_PORT === 465, // 465=SSL, 587=STARTTLS
+      secure: SMTP_PORT === 465, // SSL su 465, STARTTLS su 587
       auth: { user: SMTP_USER, pass: SMTP_PASS },
+      tls: { servername: "authsmtp.securemail.pro" }, // fix certificato Register
     });
 
     await transporter.verify();
+    console.log("[VALUTAZIONE] transporter OK");
 
     const subject = `Valutazione — ${company ?? "Azienda"} — ${name ?? "N/D"}`;
     const rows = [
@@ -110,6 +117,8 @@ export async function POST(req: NextRequest) {
       text,
       html,
     });
+
+    console.log("[VALUTAZIONE] mail sent", info.messageId);
 
     return NextResponse.json({ ok: true, id: info.messageId });
   } catch (err: any) {
