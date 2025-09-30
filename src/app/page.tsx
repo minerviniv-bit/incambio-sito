@@ -5,11 +5,11 @@ import dynamic from "next/dynamic";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-// Blocchi sotto la piega -> code-splitting / lazy
-const MediaLogos = dynamic(() => import("../components/MediaLogos"), { ssr: false, loading: () => null });
-const Steps = dynamic(() => import("../components/Steps"), { ssr: false, loading: () => null });
-const CasesShowcase = dynamic(() => import("../components/CasesShowcase"), { ssr: false, loading: () => null });
-const ClientLogos = dynamic(() => import("../components/ClientLogos"), { ssr: false, loading: () => null });
+// Blocchi sotto la piega -> lazy ma **server-side**
+const MediaLogos    = dynamic(() => import("../components/MediaLogos"),    { loading: () => null });
+const Steps         = dynamic(() => import("../components/Steps"),         { loading: () => null });
+const CasesShowcase = dynamic(() => import("../components/CasesShowcase"), { loading: () => null });
+const ClientLogos   = dynamic(() => import("../components/ClientLogos"),   { loading: () => null });
 
 export default function HomePage() {
   return (
@@ -23,7 +23,7 @@ export default function HomePage() {
 
         <div className="relative mx-auto max-w-7xl px-4 md:px-6 pb-12 md:pb-16">
           <div className="mx-auto text-center">
-            {/* IMMAGINE HERO FULLSCREEN */}
+            {/* HERO fullscreen: 100vh mobile, 80vh desktop */}
             <div className="relative w-full h-[100vh] md:h-[80vh]">
               <Image
                 src="/images/Settembre-2025.png"
