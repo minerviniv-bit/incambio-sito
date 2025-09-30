@@ -46,21 +46,21 @@ export default function HomePage() {
               <a
                 href="#come-funziona"
                 aria-label="Vai alla sezione Come funziona"
-                className="rounded-2xl border border-[#e6d39a]/50 bg-[#e6d39a]/10 px-5 py-2.5 text-sm font-semibold text-[#e6d39a] hover:bg-[#e6d39a]/20 transition"
+                className="rounded-2xl border border-[#e6d39a]/60 bg-[#e6d39a]/20 px-5 py-2.5 text-sm font-semibold text-[#e6d39a] hover:bg-[#e6d39a]/30 transition"
               >
                 Scopri come funziona
               </a>
               <a
                 href="#media"
                 aria-label="Vai alla sezione Media partner"
-                className="rounded-2xl bg-white/5 px-5 py-2.5 text-sm font-semibold text-white hover:bg-white/10 transition"
+                className="rounded-2xl bg-white/10 px-5 py-2.5 text-sm font-semibold text-white hover:bg-white/20 transition"
               >
                 Vedi i media partner
               </a>
               <a
                 href="#casi"
                 aria-label="Vai alla sezione Casi reali"
-                className="text-sm text-zinc-300 underline decoration-[#e6d39a]/70 underline-offset-4 hover:text-white"
+                className="text-sm text-zinc-200 underline decoration-[#e6d39a]/80 underline-offset-4 hover:text-white"
               >
                 Casi reali
               </a>
