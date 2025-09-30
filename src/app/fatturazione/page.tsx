@@ -1,7 +1,9 @@
+import type { Metadata } from "next";
+import Image from "next/image";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Fatturazione | inCambio",
 };
 
@@ -16,10 +18,14 @@ export default function FatturazionePage() {
         <section className="relative py-20">
           <div className="mx-auto max-w-5xl px-6 text-center">
             {/* Immagine slide */}
-            <img
+            <Image
               src="/pagina-3.png"
               alt="Schema fatturazione InCambio"
-              className="mx-auto mb-12 rounded-lg shadow-lg"
+              width={1000}
+              height={700}
+              className="mx-auto mb-12 rounded-lg shadow-lg h-auto w-full"
+              priority
+              sizes="(max-width: 768px) 100vw, 1000px"
             />
 
             {/* Testo descrittivo */}

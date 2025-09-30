@@ -1,223 +1,229 @@
 // src/app/pubblicita-cambio-merce/page.tsx
 import type { Metadata } from "next";
-import Script from "next/script";
+import Image from "next/image";
+import Link from "next/link";
 
+// ---------- METADATA ----------
 export const metadata: Metadata = {
-  title: "Pubblicità in cambio merce (media barter) | inCambio",
+  title: "Pubblicità in cambio merce | inCambio",
   description:
-    "Trasforma prodotti o servizi in visibilità: pubblicità in cambio merce su TV, Radio, Digital e affissioni. Valutazione stock, pianificazione media, KPI e ottimizzazione.",
-  keywords: [
-    "pubblicità in cambio merce",
-    "cambio merce pubblicità",
-    "baratto pubblicitario",
-    "media barter",
-    "permute pubblicitarie",
-    "compensazione merce",
-  ],
+    "Trasforma i tuoi prodotti o servizi in visibilità: campagne pubblicitarie TV, Radio e Digital in cambio merce. Strategia, KPI e ottimizzazione.",
   alternates: { canonical: "https://www.incambio.eu/pubblicita-cambio-merce" },
   openGraph: {
-    title: "Pubblicità in cambio merce (media barter) | inCambio",
+    title: "Pubblicità in cambio merce | inCambio",
     description:
-      "Media barter: converti prodotti/servizi in campagne su TV, Radio, Digital e affissioni. Strategia, creatività, KPI e report.",
+      "Scambia i tuoi prodotti o servizi con spot pubblicitari: TV, Radio, Digital e affissioni. KPI chiari e ROI misurabile.",
     url: "https://www.incambio.eu/pubblicita-cambio-merce",
     siteName: "inCambio",
     type: "article",
-    locale: "it_IT",
+    images: [
+      {
+        url: "https://www.incambio.eu/images/Settembre-2025.png",
+        width: 1200,
+        height: 630,
+        alt: "inCambio – Pubblicità in cambio merce",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pubblicità in cambio merce (media barter) | inCambio",
+    title: "Pubblicità in cambio merce | inCambio",
     description:
-      "Trasforma stock in visibilità: campagne TV, Radio e Digital in compensazione merce. Report KPI e ottimizzazione.",
+      "Campagne pubblicitarie senza esborso di cassa: TV, Radio, Digital e affissioni in cambio merce.",
+    images: ["https://www.incambio.eu/images/Settembre-2025.png"],
   },
+  robots: { index: true, follow: true },
 };
 
+// ---------- JSON-LD utility ----------
+function JsonLd({ data }: { data: Record<string, unknown> }) {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+// ---------- SCHEMA.ORG ----------
+const SERVICE_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Pubblicità in cambio merce",
+  serviceType: "Advertising barter (TV, Radio, Digital)",
+  description:
+    "Con la pubblicità in cambio merce puoi pagare campagne media cedendo prodotti o servizi. Pianificazione e KPI chiari, con possibilità di ROI misurabile.",
+  areaServed: [{ "@type": "Country", name: "Italia" }],
+  url: "https://www.incambio.eu/pubblicita-cambio-merce",
+  provider: { "@id": "https://www.incambio.eu/#org" },
+};
+
+const BREADCRUMB_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.incambio.eu/" },
+    { "@type": "ListItem", position: 2, name: "Pubblicità in cambio merce", item: "https://www.incambio.eu/pubblicita-cambio-merce" },
+  ],
+};
+
+const FAQ_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Che cos’è la pubblicità in cambio merce?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "È una formula barter: cedi prodotti o servizi in cambio di spazi pubblicitari su TV, Radio, Digital e affissioni.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Quali vantaggi ha la pubblicità in cambio merce?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Riduci l’esborso di cassa, valorizzi gli stock, ottieni campagne su misura con KPI misurabili e report periodici.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Quali canali posso acquistare?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "TV locali e nazionali, Radio, Digital (Google, social, display) e affissioni. Pianificazione personalizzata.",
+      },
+    },
+  ],
+};
+
+// ---------- PAGINA ----------
 export default function Page() {
-  // FAQ structured data
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "Come funziona la pubblicità in cambio merce?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text:
-            "Valutiamo il tuo stock o i tuoi servizi e li convertiamo in un credito media. Con quel credito pianifichiamo campagne su TV, Radio, Digital e affissioni. Tu non immobilizzi cassa e ottieni visibilità misurabile.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Che cosa posso dare in cambio?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text:
-            "Prodotti finiti, servizi, voucher o notti camere/ristorazione. Valutiamo caso per caso la rivendibilità e la logistica.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "È vantaggioso rispetto all’acquisto tradizionale?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text:
-            "Sì se hai stock o capacità produttiva: trasformi beni in visibilità senza out-of-pocket immediato, mantenendo pianificazione e KPI come in un acquisto cash.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Posso misurare i risultati?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text:
-            "Certo: definiamo KPI (reach, GRP/OTS, lead, vendite, ricerche brand) e inviamo report periodici con ottimizzazioni.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Su quali media posso investire?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text:
-            "TV locali/nazionali, Radio, Digital (search, social, display), affissioni. Costruiamo un mix su obiettivi e target.",
-        },
-      },
-    ],
-  };
-
-  // Breadcrumb structured data
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.incambio.eu/" },
-      { "@type": "ListItem", position: 2, name: "Pubblicità in cambio merce", item: "https://www.incambio.eu/pubblicita-cambio-merce" },
-    ],
-  };
-
   return (
     <main className="min-h-screen bg-black text-zinc-100">
-      {/* JSON-LD */}
-      <Script
-        id="faq-barter-jsonld"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
-      <Script
-        id="breadcrumb-barter-jsonld"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
+      {/* Breadcrumb */}
+      <nav
+        aria-label="breadcrumb"
+        className="mx-auto max-w-5xl px-6 pt-24 text-sm text-zinc-400"
+      >
+        <ol className="flex gap-2">
+          <li><Link href="/" className="hover:text-white">Home</Link></li>
+          <li aria-hidden>›</li>
+          <li className="text-zinc-300">Pubblicità in cambio merce</li>
+        </ol>
+      </nav>
 
-      <section className="mx-auto max-w-4xl px-6 pt-28 pb-16">
-        <h1 className="text-3xl font-bold text-[#e6d39a]">Pubblicità in cambio merce</h1>
+      {/* HERO */}
+      <section className="mx-auto max-w-5xl px-6 pb-10 pt-6">
+        <h1 className="text-3xl md:text-4xl font-bold text-[#e6d39a]">
+          Pubblicità in cambio merce
+        </h1>
 
-        <p className="mt-4 text-zinc-300">
-          Con il <strong>media barter</strong> trasformi <strong>prodotti o servizi</strong> in
-          <strong> spazi pubblicitari</strong>. Valutiamo lo stock e lo convertiamo in un credito
-          media per campagne su <strong>TV</strong>, <strong>Radio</strong>, <strong>Digital</strong> e{" "}
-          <strong>affissioni</strong>. KPI chiari, report e ottimizzazioni continue.
+        <p className="mt-4 max-w-3xl text-zinc-300">
+          Con la <strong>pubblicità in cambio merce</strong> trasformi il valore
+          dei tuoi prodotti o servizi in <strong>budget media</strong> da
+          utilizzare su <strong>TV</strong>, <strong>radio</strong>,{" "}
+          <strong>digital</strong> e affissioni, senza esborso diretto di cassa.
         </p>
 
-        <h2 className="mt-10 text-2xl font-semibold text-white">Come lavoriamo</h2>
-        <ul className="mt-4 list-disc pl-5 text-zinc-300">
-          <li>Valutazione stock/servizi e definizione del <strong>credito media</strong>.</li>
-          <li>Strategia e pianificazione sui canali più efficaci per il tuo target.</li>
-          <li>Creatività, formati e adattamenti tecnici (spot TV/radio, asset digital, affissioni).</li>
-          <li>Acquisto spazi, flighting e gestione <strong>GRP/OTS</strong>, reach e frequenza.</li>
-          <li>Report KPI e ottimizzazione dei risultati.</li>
-        </ul>
-
-        <div className="mt-8 flex flex-wrap gap-4">
-          <a
-            href="/valutazione"
-            className="rounded-2xl border border-[#e6d39a]/60 bg-[#e6d39a]/10 px-6 py-3 text-[#e6d39a] hover:bg-[#e6d39a]/20"
-          >
-            Richiedi una valutazione
-          </a>
-          <a
-            href="/contatti"
-            className="rounded-2xl bg-white/5 px-6 py-3 hover:bg-white/10"
-          >
-            Contattaci
-          </a>
+        <div className="mt-8">
+          <Image
+            src="/images/Settembre-2025.png"
+            alt="Campagna pubblicitaria in cambio merce"
+            width={1200}
+            height={630}
+            className="w-full h-auto rounded-xl border border-white/10"
+            priority
+          />
         </div>
 
-        {/* --- TESTO SEO ESTESO --- */}
-        <section className="mt-12 space-y-6">
-          <h2 className="text-2xl font-semibold">Baratto pubblicitario: vantaggi</h2>
-          <p className="text-zinc-300">
-            Il <strong>baratto pubblicitario</strong> permette di attivare campagne anche quando il
-            budget cash è limitato. Converti beni a magazzino, servizi o capacità inutilizzata in
-            visibilità. Mantieni la qualità della pianificazione e ottieni <strong>report KPI</strong> come in un acquisto tradizionale.
-          </p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Link
+            href="/valutazione"
+            className="rounded-2xl border border-[#e6d39a]/60 bg-[#e6d39a]/10 px-5 py-2.5 text-[#e6d39a] hover:bg-[#e6d39a]/20 transition"
+          >
+            Richiedi una valutazione
+          </Link>
+          <Link
+            href="/contatti"
+            className="rounded-2xl bg-white/5 px-5 py-2.5 text-white hover:bg-white/10 transition"
+          >
+            Contattaci
+          </Link>
+        </div>
+      </section>
 
-          <h3 className="text-xl font-semibold">Esempi pratici</h3>
-          <p className="text-zinc-300">
-            Aziende del food & wine convertiscono lotti in <strong>spot TV e radio</strong>; strutture
-            ricettive usano voucher per <strong>campagne digital</strong> geo-targettizzate; retailer
-            valorizzano stock stagionali in <strong>affissioni</strong> e awareness locale.
-          </p>
+      {/* CONTENUTO SEO */}
+      <section className="mx-auto max-w-5xl px-6 pb-14">
+        <h2 className="text-2xl font-semibold text-white">Come funziona</h2>
+        <ul className="mt-4 list-disc pl-5 text-zinc-300">
+          <li>Definizione delle quantità e del valore della merce/servizi.</li>
+          <li>Pianificazione media coerente con il target e gli obiettivi.</li>
+          <li>Gestione creatività e coordinamento con i partner media.</li>
+          <li>Report KPI e ottimizzazione in corso d’opera.</li>
+        </ul>
 
-          <h3 className="text-xl font-semibold">Controllo e misurazione</h3>
-          <p className="text-zinc-300">
-            Definiamo obiettivi e misuriamo <strong>reach, GRP/OTS, lead, vendite, ricerche brand</strong>.
-            Ottimizziamo flight, formati e canali per massimizzare il ROI del tuo credito media.
-          </p>
-
-          <div className="mt-6 flex flex-wrap gap-4">
-            <a
-              href="/valutazione"
-              className="rounded-2xl border border-[#e6d39a]/60 bg-[#e6d39a]/10 px-6 py-3 text-[#e6d39a] hover:bg-[#e6d39a]/20"
-            >
-              Richiedi una valutazione gratuita
-            </a>
-            <a
-              href="/pubblicita-roma"
-              className="underline decoration-[#e6d39a]/70 underline-offset-4"
-            >
-              Pubblicità a Roma
-            </a>
-            <span className="text-zinc-500">•</span>
-            <a
-              href="/pubblicita-tv"
-              className="underline decoration-[#e6d39a]/70 underline-offset-4"
-            >
-              Pubblicità TV
-            </a>
-            <span className="text-zinc-500">•</span>
-            <a
-              href="/pubblicita-radio"
-              className="underline decoration-[#e6d39a]/70 underline-offset-4"
-            >
-              Pubblicità Radio
-            </a>
-          </div>
-        </section>
-
-        {/* Link contestuali finali */}
-        <p className="mt-10 text-sm text-zinc-400">
-          Vedi anche:{" "}
-          <a href="/pubblicita-roma" className="underline decoration-[#e6d39a]/70">
-            pubblicità a Roma
-          </a>{" "}
+        {/* Link interni */}
+        <p className="mt-6 text-zinc-300">
+          Potrebbero interessarti:{" "}
+          <Link href="/cambio-merce" className="underline decoration-[#e6d39a]/70">
+            cambio merce
+          </Link>{" "}
           •{" "}
-          <a href="/pubblicita-tv" className="underline decoration-[#e6d39a]/70">
+          <Link href="/pubblicita-tv" className="underline decoration-[#e6d39a]/70">
             pubblicità TV
-          </a>{" "}
+          </Link>{" "}
           •{" "}
-          <a href="/pubblicita-radio" className="underline decoration-[#e6d39a]/70">
+          <Link href="/pubblicita-radio" className="underline decoration-[#e6d39a]/70">
             pubblicità Radio
-          </a>{" "}
+          </Link>{" "}
           •{" "}
-          <a href="/valutazione" className="underline decoration-[#e6d39a]/70">
-            valutazione campagna
-          </a>
+          <Link href="/baratto-pubblicita" className="underline decoration-[#e6d39a]/70">
+            baratto pubblicitario
+          </Link>
+          .
         </p>
       </section>
+
+      {/* FAQ */}
+      <section className="mx-auto max-w-5xl px-6 pb-20">
+        <h2 className="text-2xl font-semibold text-white">Domande frequenti</h2>
+        <div className="mt-6 space-y-5">
+          <details className="rounded-lg border border-white/10 bg-white/[0.02] p-4">
+            <summary className="cursor-pointer text-white">
+              Che cos’è la pubblicità in cambio merce?
+            </summary>
+            <p className="mt-3 text-zinc-300">
+              È una formula barter che ti permette di ottenere visibilità
+              pubblicitaria cedendo prodotti o servizi invece che denaro.
+            </p>
+          </details>
+          <details className="rounded-lg border border-white/10 bg-white/[0.02] p-4">
+            <summary className="cursor-pointer text-white">
+              Quali sono i vantaggi?
+            </summary>
+            <p className="mt-3 text-zinc-300">
+              Eviti esborso di cassa, valorizzi stock e ottieni report KPI con
+              misurazioni chiare.
+            </p>
+          </details>
+          <details className="rounded-lg border border-white/10 bg-white/[0.02] p-4">
+            <summary className="cursor-pointer text-white">
+              Quali canali posso acquistare?
+            </summary>
+            <p className="mt-3 text-zinc-300">
+              TV locali e nazionali, Radio, Digital (Google, social, display) e
+              affissioni. Il mix viene calibrato in base al tuo target.
+            </p>
+          </details>
+        </div>
+      </section>
+
+      {/* JSON-LD */}
+      <JsonLd data={SERVICE_JSON_LD} />
+      <JsonLd data={BREADCRUMB_JSON_LD} />
+      <JsonLd data={FAQ_JSON_LD} />
     </main>
   );
 }

@@ -3,6 +3,17 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
+/** ---------- JSON-LD types (no any) ---------- */
+type JSONValue =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: JSONValue }
+  | JSONValue[];
+
+type JSONLD = Record<string, JSONValue>;
+
 // ---------- METADATA ----------
 export const metadata: Metadata = {
   title: "Pubblicità TV | inCambio",
@@ -39,10 +50,11 @@ export const metadata: Metadata = {
 };
 
 // ---------- JSON-LD utility ----------
-function JsonLd({ data }: { data: Record<string, any> }) {
+function JsonLd({ data }: { data: JSONLD }) {
   return (
     <script
       type="application/ld+json"
+      // JSON.stringify accetta JSONValue senza problemi
       dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
     />
   );
@@ -59,7 +71,7 @@ const SERVICE_JSON_LD = {
   areaServed: { "@type": "Country", name: "Italia" },
   url: "https://www.incambio.eu/pubblicita-tv",
   provider: { "@id": "https://www.incambio.eu/#org" },
-};
+} satisfies JSONLD;
 
 const BREADCRUMB_JSON_LD = {
   "@context": "https://schema.org",
@@ -78,7 +90,7 @@ const BREADCRUMB_JSON_LD = {
       item: "https://www.incambio.eu/pubblicita-tv",
     },
   ],
-};
+} satisfies JSONLD;
 
 const FAQ_JSON_LD = {
   "@context": "https://schema.org",
@@ -109,7 +121,7 @@ const FAQ_JSON_LD = {
       },
     },
   ],
-};
+} satisfies JSONLD;
 
 // ---------- PAGINA ----------
 export default function Page() {
@@ -193,9 +205,7 @@ export default function Page() {
           <li>Possibilità di <strong>cambio merce</strong> (barter).</li>
         </ul>
 
-        <h3 className="mt-10 text-xl font-semibold text-white">
-          Formati e flight
-        </h3>
+        <h3 className="mt-10 text-xl font-semibold text-white">Formati e flight</h3>
         <p className="mt-3 text-zinc-300">
           Definiamo flight per massimizzare copertura e frequenza con il budget
           disponibile. Usiamo stime di audience e benchmark per scegliere reti,
