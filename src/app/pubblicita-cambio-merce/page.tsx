@@ -1,6 +1,5 @@
 // src/app/pubblicita-cambio-merce/page.tsx
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 
 // ---------- METADATA ----------
@@ -16,21 +15,12 @@ export const metadata: Metadata = {
     url: "https://www.incambio.eu/pubblicita-cambio-merce",
     siteName: "inCambio",
     type: "article",
-    images: [
-      {
-        url: "https://www.incambio.eu/images/Settembre-2025.png",
-        width: 1200,
-        height: 630,
-        alt: "inCambio – Pubblicità in cambio merce",
-      },
-    ],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "Pubblicità in cambio merce | inCambio",
     description:
       "Campagne pubblicitarie senza esborso di cassa: TV, Radio, Digital e affissioni in cambio merce.",
-    images: ["https://www.incambio.eu/images/Settembre-2025.png"],
   },
   robots: { index: true, follow: true },
 };
@@ -127,17 +117,7 @@ export default function Page() {
           <strong>digital</strong> e affissioni, senza esborso diretto di cassa.
         </p>
 
-        <div className="mt-8">
-          <Image
-            src="/images/Settembre-2025.png"
-            alt="Campagna pubblicitaria in cambio merce"
-            width={1200}
-            height={630}
-            className="w-full h-auto rounded-xl border border-white/10"
-            priority
-          />
-        </div>
-
+        {/* CTA */}
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
             href="/valutazione"

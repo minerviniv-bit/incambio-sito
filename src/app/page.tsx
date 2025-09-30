@@ -26,18 +26,17 @@ export default function HomePage() {
             <Image
               src="/images/Settembre-2025.png"
               alt="Calice di vino – Trasforma il tuo prodotto in visibilità"
-              width={1080}
-              height={1350}
+              width={1920}
+              height={1080}
               priority
               fetchPriority="high"
-              sizes="(max-width: 640px) 100vw, (max-width: 1200px) 80vw, 1080px"
+              quality={100}
+              sizes="(max-width: 640px) 100vw, (max-width: 1200px) 80vw, 1920px"
               className="mx-auto w-full max-w-6xl object-contain"
             />
 
             {/* Titolo e testo per SEO / screen-reader (non visibili) */}
-            <h1 className="sr-only">
-              TRASFORMA IL TUO PRODOTTO IN VISIBILITÀ
-            </h1>
+            <h1 className="sr-only">TRASFORMA IL TUO PRODOTTO IN VISIBILITÀ</h1>
             <p className="sr-only">
               Pubblicità in cambio merce. Semplice, misurabile, veloce.
             </p>

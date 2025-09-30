@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Inter } from "next/font/google"; // 👉 se preferisci Geist, puoi cambiare qui
+import { Inter } from "next/font/google";
 
 // Configura il font scelto
 const inter = Inter({
@@ -24,21 +24,14 @@ export const metadata: Metadata = {
     title: "inCambio – Pubblicità in cambio merce",
     description:
       "Trasforma i tuoi prodotti in visibilità: TV, Radio e Digital in cambio merce. Con inCambio investi senza cash flow e ottieni nuovi clienti.",
-    images: [
-      {
-        url: "/og/incambio-default.jpg",
-        width: 1200,
-        height: 630,
-        alt: "inCambio – Pubblicità in cambio merce",
-      },
-    ],
+    // 🔴 immagini rimosse
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "inCambio – Pubblicità in cambio merce",
     description:
       "Campagne TV, Radio e Digital in cambio merce. Pubblicità senza esborso di cassa.",
-    images: ["/og/incambio-default.jpg"],
+    // 🔴 immagini rimosse
   },
   icons: {
     icon: "/favicon.ico",
@@ -54,7 +47,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="it">
-      {/* 👇 il font viene applicato qui, niente più Arial in globals.css */}
       <body className={`${inter.className} antialiased`}>
         {children}
       </body>

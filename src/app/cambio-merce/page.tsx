@@ -1,6 +1,5 @@
 // src/app/cambio-merce/page.tsx
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 
 // ---------- METADATA ----------
@@ -16,21 +15,12 @@ export const metadata: Metadata = {
     url: "https://www.incambio.eu/cambio-merce",
     siteName: "inCambio",
     type: "article",
-    images: [
-      {
-        url: "https://www.incambio.eu/images/Settembre-2025.png",
-        width: 1200,
-        height: 630,
-        alt: "inCambio — Cambio merce per la pubblicità",
-      },
-    ],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "Cambio merce per la pubblicità | inCambio",
     description:
       "Con il cambio merce converti beni e servizi in visibilità su TV, Radio e Digital. KPI chiari e report.",
-    images: ["https://www.incambio.eu/images/Settembre-2025.png"],
   },
   robots: { index: true, follow: true },
 };
@@ -132,17 +122,6 @@ export default function Page() {
           <strong>Digital</strong> e <strong>affissioni</strong>. Definiamo KPI
           e forniamo report con ottimizzazioni in corso d’opera.
         </p>
-
-        <div className="mt-8">
-          <Image
-            src="/images/Settembre-2025.png"
-            alt="Cambio merce: conversione stock in credito media per pubblicità"
-            width={1200}
-            height={630}
-            className="w-full h-auto rounded-xl border border-white/10"
-            priority
-          />
-        </div>
 
         <div className="mt-8 flex flex-wrap gap-3">
           <Link

@@ -1,6 +1,5 @@
 // src/app/pubblicita-radio/page.tsx
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 
 // ---------- METADATA ----------
@@ -16,21 +15,12 @@ export const metadata: Metadata = {
     url: "https://www.incambio.eu/pubblicita-radio",
     siteName: "inCambio",
     type: "article",
-    images: [
-      {
-        url: "https://www.incambio.eu/images/Settembre-2025.png",
-        width: 1200,
-        height: 630,
-        alt: "inCambio – Pubblicità Radio",
-      },
-    ],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "Pubblicità Radio: spot locali e nazionali | inCambio",
     description:
       "Pianificazione spot radio con KPI e ottimizzazioni. Possibilità di cambio merce.",
-    images: ["https://www.incambio.eu/images/Settembre-2025.png"],
   },
   robots: { index: true, follow: true },
 };
@@ -111,9 +101,7 @@ export default function Page() {
         className="mx-auto max-w-5xl px-6 pt-24 text-sm text-zinc-400"
       >
         <ol className="flex gap-2">
-          <li>
-            <Link href="/" className="hover:text-white">Home</Link>
-          </li>
+          <li><Link href="/" className="hover:text-white">Home</Link></li>
           <li aria-hidden>›</li>
           <li className="text-zinc-300">Pubblicità Radio</li>
         </ol>
@@ -133,17 +121,7 @@ export default function Page() {
           stock o servizi, possiamo valutare il <strong>cambio merce</strong>.
         </p>
 
-        <div className="mt-8">
-          <Image
-            src="/images/Settembre-2025.png"
-            alt="Pianificazione spot radio su emittenti locali e nazionali"
-            width={1200}
-            height={630}
-            className="w-full h-auto rounded-xl border border-white/10"
-            priority
-          />
-        </div>
-
+        {/* CTA */}
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
             href="/valutazione"
