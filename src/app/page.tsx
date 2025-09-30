@@ -5,11 +5,11 @@ import dynamic from "next/dynamic";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-// Blocchi sotto la piega -> code-splitting / lazy
-const MediaLogos = dynamic(() => import("../components/MediaLogos"), { loading: () => null });
-const Steps = dynamic(() => import("../components/Steps"), { loading: () => null });
-const CasesShowcase = dynamic(() => import("../components/CasesShowcase"), { loading: () => null });
-const ClientLogos = dynamic(() => import("../components/ClientLogos"), { loading: () => null });
+// Blocchi sotto la piega -> code-splitting / lazy (NO SSR)
+const MediaLogos    = dynamic(() => import("../components/MediaLogos"),    { ssr: false, loading: () => null });
+const Steps         = dynamic(() => import("../components/Steps"),         { ssr: false, loading: () => null });
+const CasesShowcase = dynamic(() => import("../components/CasesShowcase"), { ssr: false, loading: () => null });
+const ClientLogos   = dynamic(() => import("../components/ClientLogos"),   { ssr: false, loading: () => null });
 
 export default function HomePage() {
   return (
