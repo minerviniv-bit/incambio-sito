@@ -1,8 +1,15 @@
 // src/app/page.tsx
 import Image from "next/image";
+import dynamic from "next/dynamic";
+
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import BelowFold from "../components/BelowFold"; // ⬅️ nuovo
+
+// Blocchi sotto la piega -> lazy ma server (meno JS nel client)
+const MediaLogos    = dynamic(() => import("../components/MediaLogos"),    { loading: () => null });
+const Steps         = dynamic(() => import("../components/Steps"),         { loading: () => null });
+const CasesShowcase = dynamic(() => import("../components/CasesShowcase"), { loading: () => null });
+const ClientLogos   = dynamic(() => import("../components/ClientLogos"),   { loading: () => null });
 
 export default function HomePage() {
   return (
@@ -11,19 +18,24 @@ export default function HomePage() {
 
       {/* HERO */}
       <section className="relative isolate overflow-hidden pt-24 md:pt-28">
+        {/* Radiale alleggerita su mobile (meno paint) */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#8b5c20_0%,transparent_55%)] opacity-20 md:opacity-40" />
+
         <div className="relative mx-auto max-w-7xl px-4 md:px-6 pb-12 md:pb-16">
           <div className="mx-auto text-center">
-            <Image
-              src="/images/Settembre-2025.png"
-              alt="Calice di vino – Trasforma il tuo prodotto in visibilità"
-              width={1080}
-              height={1350}
-              priority
-              fetchPriority="high"
-              sizes="(max-width: 640px) 100vw, (max-width: 1200px) 80vw, 1080px"
-              className="mx-auto w-full max-w-6xl object-contain"
-            />
+
+            {/* FIX CLS: riservo lo spazio con aspect-ratio e uso Image fill */}
+            <div className="mx-auto w-full max-w-6xl aspect-[1080/1350] relative">
+              <Image
+                src="/images/Settembre-2025.png"
+                alt="Calice di vino – Trasforma il tuo prodotto in visibilità"
+                fill
+                priority
+                fetchPriority="high"
+                sizes="(max-width: 640px) 100vw, (max-width: 1200px) 80vw, 1080px"
+                className="object-contain"
+              />
+            </div>
 
             {/* Titolo e testo solo mobile (SEO + accessibilità) */}
             <h1 className="font-serif text-2xl tracking-wide text-[#e6d39a] md:hidden mt-2">
@@ -60,8 +72,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Sotto la piega (client + ssr:false dentro) */}
-      <BelowFold />
+      {/* LOGHI MEDIA */}
+      <MediaLogos />
+
+      {/* COME FUNZIONA */}
+      <section id="come-funziona">
+        <Steps />
+      </section>
+
+      {/* CASI REALI */}
+      <section id="casi">
+        <CasesShowcase />
+      </section>
+
+      {/* CLIENTI */}
+      <ClientLogos />
 
       <Footer />
     </main>
