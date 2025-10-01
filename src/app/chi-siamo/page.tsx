@@ -1,177 +1,119 @@
 // src/app/chi-siamo/page.tsx
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import Script from "next/script";
 
-/* ========== SEO / METADATA ========== */
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.incambio.eu"),
-  title: "Perché scegliere inCambio | Chi siamo",
+  title: "Chi siamo | InCambio",
   description:
-    "Pubblicità al prezzo di mercato, canali di vendita concordati e media di primo livello. Scopri perché scegliere inCambio.",
+    "InCambio è un’agenzia specializzata nel pianificare campagne pubblicitarie nazionali e locali. Core business: cambio merce pubblicitario. Attivi nei settori Food & Beverage, biglietteria, parchi divertimento, casa e mobilità.",
   alternates: { canonical: "https://www.incambio.eu/chi-siamo" },
   openGraph: {
-    title: "Perché scegliere inCambio | Chi siamo",
+    title: "Chi siamo | InCambio",
     description:
-      "Pubblicità al prezzo di mercato, canali concordati e media di primo livello.",
+      "Specialisti nel cambio merce pubblicitario. Campagne su TV, Radio, Stampa, Digital e Outdoor.",
     url: "https://www.incambio.eu/chi-siamo",
     siteName: "InCambio",
-    type: "article",
-    locale: "it_IT",
-    images: [
-      {
-        url: "/hero/hero-1920.png",
-        width: 1920,
-        height: 1080,
-        alt: "InCambio – Perché sceglierci",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Perché scegliere inCambio | Chi siamo",
-    description:
-      "Pubblicità al prezzo di mercato, canali concordati e media di primo livello.",
-    images: ["/hero/hero-1920.png"],
+    type: "website",
   },
 };
 
-/* Icone semplici (SVG inline, nessuna libreria) */
-function IconCheck() {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      className="h-8 w-8 flex-none"
-      fill="none"
-      stroke="#e6d39a"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M20 6 9 17l-5-5" />
-    </svg>
-  );
-}
-function IconUsers() {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      className="h-8 w-8 flex-none"
-      fill="none"
-      stroke="#e6d39a"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
-  );
-}
-function IconStar() {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      className="h-8 w-8 flex-none"
-      fill="none"
-      stroke="#e6d39a"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9 12 2" />
-    </svg>
-  );
-}
-
 export default function ChiSiamoPage() {
-  const points = [
-    {
-      icon: <IconCheck />,
-      title: "Pubblicità al prezzo di mercato",
-      text:
-        "Ogni campagna viene pianificata e venduta ai normali prezzi di mercato.",
-    },
-    {
-      icon: <IconUsers />,
-      title: "Canali di vendita sempre concordati con il cliente",
-      text:
-        "La tua merce o i tuoi servizi non finiscono dove capita: scegliamo insieme le destinazioni con clausole chiare.",
-    },
-    {
-      icon: <IconStar />,
-      title: "Media di primo livello",
-      text:
-        "Collaboriamo con i principali brand di TV, radio, stampa, digital e outdoor sia nazionali che locali.",
-    },
-  ];
-
-  // JSON-LD per la pagina (WebPage)
-  const webPageLd = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: "Perché scegliere inCambio | Chi siamo",
-    url: "https://www.incambio.eu/chi-siamo",
-    description:
-      "Pubblicità al prezzo di mercato, canali concordati e media di primo livello.",
-    breadcrumb: {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://www.incambio.eu/" },
-        { "@type": "ListItem", position: 2, name: "Chi siamo", item: "https://www.incambio.eu/chi-siamo" },
-      ],
-    },
-  };
-
   return (
-    <main className="min-h-screen bg-black text-white">
-      {/* JSON-LD */}
-      <Script
-        id="ld-webpage-chi-siamo"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageLd) }}
-      />
+    <main className="min-h-screen bg-black text-zinc-100 py-24 px-6">
+      <div className="mx-auto max-w-5xl text-center">
+        {/* Logo */}
+        <Image
+          src="/logos/incambio.png"
+          alt="InCambio"
+          width={220}
+          height={80}
+          className="mx-auto mb-12"
+          priority
+        />
 
-      {/* Hero semplice (titolo) */}
-      <section className="max-w-5xl mx-auto px-6 pt-28 pb-16 text-center">
-        <h1 className="text-4xl md:text-5xl font-serif text-[#e6d39a] font-bold">
-          Perché scegliere inCambio
-        </h1>
-      </section>
-
-      {/* Tre punti */}
-      <section className="max-w-5xl mx-auto px-6 pb-20">
-        <div className="space-y-10">
-          {points.map((p, i) => (
-            <div key={i} className="flex items-start gap-5">
-              {p.icon}
-              <div>
-                <h2 className="text-xl md:text-2xl font-semibold">{p.title}</h2>
-                <p className="mt-2 text-zinc-300 leading-relaxed">{p.text}</p>
-              </div>
-            </div>
-          ))}
+        {/* Testo descrittivo */}
+        <div className="text-lg leading-relaxed text-zinc-300 space-y-4 mb-16">
+          <p>
+            InCambio è un’agenzia specializzata nella pianificazione di campagne
+            pubblicitarie nazionali e locali.
+          </p>
+          <p>
+            Il nostro core business è il{" "}
+            <span className="text-[#e6d39a] font-semibold">
+              cambio merce pubblicitario
+            </span>
+            , una formula che consente alle aziende di trasformare prodotti e
+            servizi in visibilità sui media.
+          </p>
+          <p>
+            Siamo particolarmente attivi nei settori{" "}
+            <strong>Food & Beverage</strong>, biglietteria di ogni genere,
+            parchi divertimento e a tema, e in tutto ciò che riguarda la{" "}
+            <strong>casa</strong>: pavimenti, rivestimenti, serramenti, arredo
+            giardino, arredamento, cucine, mobili, elettrodomestici,
+            climatizzazione, TV e impianti hi-fi.
+          </p>
+          <p>
+            Lavoriamo inoltre nel comparto <strong>mobilità</strong>,
+            collaborando con brand di auto, moto, scooter, biciclette e
+            monopattini.
+          </p>
+          <p className="font-semibold text-[#e6d39a]">
+            Valutiamo con attenzione ogni richiesta che ci venga inoltrata, con
+            l’obiettivo di costruire insieme soluzioni pubblicitarie efficaci e
+            trasparenti.
+          </p>
         </div>
-      </section>
 
-      {/* CTA finale – fascia oro */}
-      <section className="bg-[#e6d39a] text-black text-center py-12">
-        <p className="text-2xl md:text-3xl font-bold">
-          Richiedi la tua valutazione gratuita su{" "}
-          <Link href="/valutazione" className="underline hover:text-zinc-800">
-            incambio.eu
-          </Link>{" "}
-          oppure{" "}
-          <Link href="/contatti" className="underline hover:text-zinc-800">
-            incontriamoci
+        {/* Tre card */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          <div className="rounded-2xl bg-zinc-900/90 border border-white/10 p-8 shadow-lg hover:border-[#e6d39a]/50 transition">
+            <div className="text-3xl mb-4">✔️</div>
+            <h3 className="text-xl font-bold text-[#e6d39a]">
+              Pubblicità al prezzo di mercato
+            </h3>
+            <p className="mt-2 text-zinc-300">
+              Ogni campagna viene pianificata e venduta ai normali prezzi di
+              mercato.
+            </p>
+          </div>
+
+          <div className="rounded-2xl bg-zinc-900/90 border border-white/10 p-8 shadow-lg hover:border-[#e6d39a]/50 transition">
+            <div className="text-3xl mb-4">📊</div>
+            <h3 className="text-xl font-bold text-[#e6d39a]">
+              Canali sempre concordati
+            </h3>
+            <p className="mt-2 text-zinc-300">
+              Definiamo insieme i canali di vendita di ogni prodotto o servizio
+              preso in cambio di pubblicità.
+            </p>
+          </div>
+
+          <div className="rounded-2xl bg-zinc-900/90 border border-white/10 p-8 shadow-lg hover:border-[#e6d39a]/50 transition">
+            <div className="text-3xl mb-4">⭐</div>
+            <h3 className="text-xl font-bold text-[#e6d39a]">
+              Media di primo livello
+            </h3>
+            <p className="mt-2 text-zinc-300">
+              Collaboriamo con i principali brand di TV, radio, stampa, digital
+              e outdoor sia nazionali che locali.
+            </p>
+          </div>
+        </div>
+
+        {/* CTA finale */}
+        <div className="mt-8">
+          <Link
+            href="/valutazione"
+            className="inline-block rounded-xl border border-[#e6d39a]/60 bg-[#e6d39a]/10 px-8 py-4 text-lg font-semibold
+                       text-[#e6d39a] hover:bg-[#e6d39a]/20 transition focus:outline-none focus-visible:ring
+                       focus-visible:ring-[#e6d39a]/40"
+          >
+            👉 Richiedi la tua valutazione gratuita
           </Link>
-        </p>
-      </section>
+        </div>
+      </div>
     </main>
   );
 }
