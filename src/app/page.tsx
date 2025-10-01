@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -95,25 +96,19 @@ export default function HomePage() {
       {/* HEADER */}
       <Header />
 
-      {/* HERO responsive */}
-      <section className="relative w-full h-[calc(100vh-72px)] md:h-[calc(100vh-88px)] overflow-hidden">
-        <img
+      {/* HERO (LCP ottimizzato) */}
+      <section className="relative w-full h-[calc(100svh-72px)] md:h-[calc(100svh-88px)] overflow-hidden">
+        <Image
           src="/hero/hero-2560.png"
-          srcSet="
-            /hero/hero-1080.png 1080w,
-            /hero/hero-1920.png 1920w,
-            /hero/hero-2560.png 2560w
-          "
-          sizes="100vw"
           alt="Calice di vino – Trasforma il tuo prodotto in visibilità"
-          className="w-full h-full object-cover"
-          loading="eager"
-          decoding="async"
+          fill
+          priority            // preload automatico per LCP
+          sizes="100vw"        // fondamentale per mobile
+          className="object-cover"
+          quality={85}
         />
         <h1 className="sr-only">TRASFORMA IL TUO PRODOTTO IN VISIBILITÀ</h1>
-        <p className="sr-only">
-          Pubblicità in cambio merce. Semplice, misurabile, veloce.
-        </p>
+        <p className="sr-only">Pubblicità in cambio merce. Semplice, misurabile, veloce.</p>
       </section>
 
       {/* LOGHI MEDIA */}
