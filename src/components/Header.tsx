@@ -11,9 +11,9 @@ export default function Header() {
           <Image
             src="/logos/incambio.png"
             alt="InCambio"
-            width={120}     // scegli larghezza reale del tuo logo
-            height={40}     // scegli altezza reale del tuo logo
-            priority        // carica subito (essendo il logo è critico)
+            width={120}     
+            height={40}     
+            priority        
             className="h-25 w-auto"
           />
         </Link>
@@ -25,6 +25,9 @@ export default function Header() {
           </Link>
           <Link href="/#casi" className="hover:text-[#e6d39a] transition">
             Casi
+          </Link>
+          <Link href="/chi-siamo" className="hover:text-[#e6d39a] transition">
+            Chi siamo
           </Link>
           <Link
             href="/valutazione"
