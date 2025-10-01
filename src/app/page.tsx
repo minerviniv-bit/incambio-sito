@@ -96,23 +96,24 @@ export default function HomePage() {
       {/* HEADER */}
       <Header />
 
-      {/* HERO (LCP ottimizzato) */}
+      {/* HERO (solo immagine, senza CTA duplicati) */}
       <section className="relative w-full h-[calc(100svh-72px)] md:h-[calc(100svh-88px)] overflow-hidden">
         <Image
           src="/hero/hero-2560.png"
           alt="Calice di vino – Trasforma il tuo prodotto in visibilità"
           fill
-          priority            // preload automatico per LCP
-          sizes="100vw"        // fondamentale per mobile
+          priority
+          sizes="100vw"
           className="object-cover"
           quality={85}
         />
-        <h1 className="sr-only">TRASFORMA IL TUO PRODOTTO IN VISIBILITÀ</h1>
-        <p className="sr-only">Pubblicità in cambio merce. Semplice, misurabile, veloce.</p>
+        <h1 className="sr-only">Trasforma il tuo prodotto in visibilità</h1>
       </section>
 
       {/* LOGHI MEDIA */}
-      <MediaLogos />
+      <section id="media" className="scroll-mt-24">
+        <MediaLogos />
+      </section>
 
       {/* COME FUNZIONA */}
       <section id="come-funziona" className="scroll-mt-24">
