@@ -24,14 +24,21 @@ export const metadata: Metadata = {
     title: "inCambio – Pubblicità in cambio merce",
     description:
       "Trasforma i tuoi prodotti in visibilità: TV, Radio e Digital in cambio merce. Con inCambio investi senza cash flow e ottieni nuovi clienti.",
-    // 🔴 immagini rimosse
+    images: [
+      {
+        url: "/logo.png", // usa il tuo logo reale
+        width: 1200,
+        height: 630,
+        alt: "inCambio – Pubblicità in cambio merce",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "inCambio – Pubblicità in cambio merce",
     description:
       "Campagne TV, Radio e Digital in cambio merce. Pubblicità senza esborso di cassa.",
-    // 🔴 immagini rimosse
+    images: ["/logo.png"], // stesso logo per Twitter
   },
   icons: {
     icon: "/favicon.ico",
