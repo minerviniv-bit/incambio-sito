@@ -27,6 +27,8 @@ export const metadata: Metadata = {
     "campagne radio TV digital",
   ],
   alternates: { canonical: "https://www.incambio.eu/" },
+
+  // ✅ FACEBOOK / LINKEDIN
   openGraph: {
     title: "InCambio – Pubblicità in cambio merce (media barter)",
     description:
@@ -37,19 +39,21 @@ export const metadata: Metadata = {
     locale: "it_IT",
     images: [
       {
-        url: "/hero/hero-1920.png",
+        url: "https://www.incambio.eu/hero/hero-1920.png", // URL assoluto
         width: 1920,
         height: 1080,
         alt: "Trasforma il tuo prodotto in visibilità – InCambio",
       },
     ],
   },
+
+  // ✅ TWITTER / X
   twitter: {
     card: "summary_large_image",
     title: "InCambio – Pubblicità in cambio merce",
     description:
       "Media barter serio: converti merce e servizi in campagne su TV, Radio e Digital.",
-    images: ["/hero/hero-1920.png"],
+    images: ["https://www.incambio.eu/hero/hero-1920.png"], // URL assoluto
   },
 };
 
@@ -96,7 +100,7 @@ export default function HomePage() {
       {/* HEADER */}
       <Header />
 
-      {/* HERO (solo immagine, senza CTA duplicati) */}
+      {/* HERO (LCP ottimizzato) */}
       <section className="relative w-full h-[calc(100svh-72px)] md:h-[calc(100svh-88px)] overflow-hidden">
         <Image
           src="/hero/hero-2560.png"
@@ -107,13 +111,12 @@ export default function HomePage() {
           className="object-cover"
           quality={85}
         />
-        <h1 className="sr-only">Trasforma il tuo prodotto in visibilità</h1>
+        <h1 className="sr-only">TRASFORMA IL TUO PRODOTTO IN VISIBILITÀ</h1>
+        <p className="sr-only">Pubblicità in cambio merce. Semplice, misurabile, veloce.</p>
       </section>
 
       {/* LOGHI MEDIA */}
-      <section id="media" className="scroll-mt-24">
-        <MediaLogos />
-      </section>
+      <MediaLogos />
 
       {/* COME FUNZIONA */}
       <section id="come-funziona" className="scroll-mt-24">
