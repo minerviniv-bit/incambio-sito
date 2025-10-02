@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     locale: "it_IT",
     images: [
       {
-        url: "https://www.incambio.eu/hero/hero-1920.png", // URL assoluto
+        url: "https://www.incambio.eu/hero/hero-1920.png", // immagine social orizzontale
         width: 1920,
         height: 1080,
         alt: "Trasforma il tuo prodotto in visibilità – InCambio",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     title: "InCambio – Pubblicità in cambio merce",
     description:
       "Media barter serio: converti merce e servizi in campagne su TV, Radio e Digital.",
-    images: ["https://www.incambio.eu/hero/hero-1920.png"], // URL assoluto
+    images: ["https://www.incambio.eu/hero/hero-1920.png"],
   },
 };
 
@@ -100,16 +100,19 @@ export default function HomePage() {
       {/* HEADER */}
       <Header />
 
-      {/* HERO (LCP ottimizzato) */}
-      <section className="relative w-full h-[calc(100svh-72px)] md:h-[calc(100svh-88px)] overflow-hidden">
+      {/* HERO (centrato, non tagliato, responsive) */}
+      <section className="relative w-full bg-black flex items-center justify-center pt-8 pb-10 md:pt-14 md:pb-16">
         <Image
-          src="/hero/hero-2560.png"
+          src="/hero/hero-1080.png" // 👈 verticale
           alt="Calice di vino – Trasforma il tuo prodotto in visibilità"
-          fill
+          width={720}           // base desktop “comoda”
+          height={1080}
           priority
-          sizes="100vw"
-          className="object-cover"
-          quality={85}
+          quality={100}
+          sizes="(max-width: 640px) 80vw, (max-width: 1024px) 60vw, 40vw"
+          // Mantiene proporzioni e limita la larghezza massima
+          style={{ width: "min(90vw, 720px)", height: "auto" }}
+          className="select-none"
         />
         <h1 className="sr-only">TRASFORMA IL TUO PRODOTTO IN VISIBILITÀ</h1>
         <p className="sr-only">Pubblicità in cambio merce. Semplice, misurabile, veloce.</p>
