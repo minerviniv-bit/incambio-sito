@@ -100,18 +100,20 @@ export default function HomePage() {
       <Header />
 
       {/* HERO (centrato, non tagliato, responsive) */}
-      <section className="relative w-full bg-black flex items-center justify-center pt-8 pb-10 md:pt-14 md:pb-16">
-        <Image
-          src="/hero/hero-1080.png" // verticale
-          alt="Calice di vino – Trasforma il tuo prodotto in visibilità"
-          width={720}
-          height={1080}
-          priority
-          quality={100}
-          sizes="(max-width: 640px) 80vw, (max-width: 1024px) 60vw, 40vw"
-          style={{ width: "min(90vw, 720px)", height: "auto" }}
-          className="select-none"
-        />
+      <section className="bg-black flex items-center justify-center pt-8 pb-10 md:pt-14 md:pb-16">
+        {/* box con proporzione fissa → zero CLS */}
+        <div className="relative w-[min(90vw,720px)] aspect-[2/3]">
+          <Image
+            src="/hero/hero-1080.png" // verticale
+            alt="Calice di vino – Trasforma il tuo prodotto in visibilità"
+            fill
+            priority
+            fetchPriority="high"
+            sizes="(max-width: 640px) 90vw, (max-width: 1024px) 60vw, 720px"
+            className="object-contain select-none"
+          />
+        </div>
+
         <h1 className="sr-only">TRASFORMA IL TUO PRODOTTO IN VISIBILITÀ</h1>
         <p className="sr-only">Pubblicità in cambio merce. Semplice, misurabile, veloce.</p>
       </section>
