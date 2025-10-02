@@ -51,8 +51,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "InCambio – Pubblicità in cambio merce",
-    description:
-      "Media barter serio: converti merce e servizi in campagne su TV, Radio e Digital.",
+    description: "Media barter serio: converti merce e servizi in campagne su TV, Radio e Digital.",
     images: ["https://www.incambio.eu/hero/hero-1920.png"],
   },
 };
@@ -103,14 +102,13 @@ export default function HomePage() {
       {/* HERO (centrato, non tagliato, responsive) */}
       <section className="relative w-full bg-black flex items-center justify-center pt-8 pb-10 md:pt-14 md:pb-16">
         <Image
-          src="/hero/hero-1080.png" // 👈 verticale
+          src="/hero/hero-1080.png" // verticale
           alt="Calice di vino – Trasforma il tuo prodotto in visibilità"
-          width={720}           // base desktop “comoda”
+          width={720}
           height={1080}
           priority
           quality={100}
           sizes="(max-width: 640px) 80vw, (max-width: 1024px) 60vw, 40vw"
-          // Mantiene proporzioni e limita la larghezza massima
           style={{ width: "min(90vw, 720px)", height: "auto" }}
           className="select-none"
         />
